@@ -11,7 +11,12 @@ export default function Home() {
             </h2>
           </div>
           <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            There will be a content
+            Where will you use the system most? Study, work, both
+            Your typical daily load is closer to: light, moderate, heavy
+            What overloads you the most? Too many people, Deadlines, Unclear expectations, Context switching
+            When overload starts, you usually: Push through, Shut down, Lose focus
+            How strict should the system be? Gentle, Standard, Strict
+            Your typical active hours: Morning, Day, Evening, Irregular
           </p>
         </div>
         <div className="text-base font-medium">
