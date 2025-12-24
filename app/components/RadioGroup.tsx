@@ -1,16 +1,15 @@
-import { Answer } from "@/app/onboarding-data";
+import { UseFormRegisterReturn } from "react-hook-form";
+
+import { Answer } from "@/app/types";
 
 export const RadioGroup = ({
-  selectedValue,
-  radioGroupName,
   options,
   label,
+  ...inputProps
 }: {
-  selectedValue?: string;
-  radioGroupName: string;
   options: Answer[];
   label: string;
-}) => {
+} & Partial<UseFormRegisterReturn<string>>) => {
   return (
     <div className="space-y-4 w-full" role="radiogroup">
       <h4 className="block">{label}</h4>
@@ -23,13 +22,14 @@ export const RadioGroup = ({
           >
             <input
               type="radio"
-              name={radioGroupName}
               id={option.id}
               value={option.value}
-              checked={selectedValue === option.value}
-              className="w-4 h-4 accent-primary"
+              className="w-4 h-4 accent-indigo-700 peer"
+              {...(inputProps || {})}
             />
-            <span className="flex-1">{option.label}</span>
+            <span className="flex-1 peer-checked:text-indigo-700">
+              {option.label}
+            </span>
           </label>
         ))}
       </div>
