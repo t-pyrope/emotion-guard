@@ -1,3 +1,5 @@
+import { MorningCheckInForm } from "@/app/components/MorningCheckInForm";
+
 export default function Page() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -9,9 +11,7 @@ export default function Page() {
               Morning check-in
             </h2>
           </div>
-          Sleep: low / ok / good Body: tense / neutral / relaxed Mind: noisy /
-          focused / empty Contacts today: many / few / none Resource: low /
-          medium / ok
+          <MorningCheckInForm />
         </div>
       </main>
     </div>

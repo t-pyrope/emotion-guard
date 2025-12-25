@@ -1,22 +1,19 @@
 "use client";
-
+import { MorningCheckInValues } from "@/app/types";
 import { useForm } from "react-hook-form";
+import { MORNING_CHECK_IN_QUESTIONS } from "@/app/components/morning-check-in-questions";
 import { RadioGroup } from "@/app/components/RadioGroup";
-import { OnboardingFormValues } from "../types";
-import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
 
-const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+export const MorningCheckInForm = () => {
+  const { register, handleSubmit } = useForm<MorningCheckInValues>();
 
-export const OnboardingForm = () => {
-  const { register, handleSubmit } = useForm<OnboardingFormValues>();
-
-  const send = async (data: OnboardingFormValues) => {
-    const res = await fetch("/api/onboarding", {
+  const send = async (data: MorningCheckInValues) => {
+    const res = await fetch("/api/morning-check-in", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...data, timezone }),
+      body: JSON.stringify({ ...data }),
     });
 
     if (!res.ok) {
@@ -26,19 +23,20 @@ export const OnboardingForm = () => {
 
   return (
     <form onSubmit={handleSubmit(send)} className="flex flex-col gap-10 w-full">
-      {ONBOARDING_QUESTIONS.map(
+      {MORNING_CHECK_IN_QUESTIONS.map(
         ({ question, answers, radioGroupName }, index) => (
           <RadioGroup
+            options={answers}
             label={`${index + 1}. ${question}`}
             key={question}
-            options={answers}
             {...register(radioGroupName)}
           />
         ),
       )}
-      <div className="text-base font-medium mt-4 w-fit">
+
+      <div className="text-base font-medium w-fit">
         <button className="flex h-12 w-full text-nowrap items-center justify-center gap-2 rounded-full bg-foreground px-6 text-background transition-colors hover:bg-indigo-900 dark:hover:bg-[#ccc]">
-          Confirm and start
+          Submit
         </button>
       </div>
     </form>

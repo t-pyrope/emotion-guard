@@ -1,0 +1,61 @@
+import { cookies } from "next/headers";
+import { NextResponse } from "next/server";
+import { neon } from "@neondatabase/serverless";
+
+export async function POST(req: Request) {
+  const sql = neon(process.env.DATABASE_URL!);
+  const userId = (await cookies()).get("user_id")?.value;
+
+  if (!userId) {
+    return NextResponse.json({ error: "No user_id" }, { status: 401 });
+  }
+
+  const body = await req.json();
+
+  const {
+    sleepLevel,
+    bodyState,
+    mentalState,
+    contactsExpected,
+    resourceLevel,
+  } = body;
+
+  const [user] = await sql`SELECT * FROM users WHERE user_id  = ${userId}`;
+
+  const checkinDate = new Intl.DateTimeFormat("en-CA", {
+    timeZone: user.timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+
+  await sql`
+        INSERT INTO morning_checkins (
+            user_id,
+            checkin_date,
+            sleep_level,
+            body_state,
+            mental_state,
+            contacts_expected,
+            resource_level
+        ) VALUES (
+            ${userId},
+            ${checkinDate},
+            ${sleepLevel},
+            ${bodyState},
+            ${mentalState},
+            ${contactsExpected},
+            ${resourceLevel}
+        )
+        ON CONFLICT (user_id, checkin_date)
+        DO UPDATE SET
+            sleep_level = EXCLUDED.sleep_level,
+            body_state = EXCLUDED.body_state,
+            mental_state = EXCLUDED.mental_state,
+            contacts_expected = EXCLUDED.contacts_expected,
+            resource_level = EXCLUDED.resource_level,
+            created_at = now();
+    `;
+
+  return NextResponse.json({ ok: true });
+}
