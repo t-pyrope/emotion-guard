@@ -1,9 +1,9 @@
 export interface OnboardingFormValues {
-  systemUse: string;
+  mainContext: string;
   typicalDailyLoad: string;
-  overloadsMost: string;
+  overloadSources: string;
   actionOnOverload: string;
-  systemStrictness: string;
+  strictnessLevel: string;
   activeHours: string;
 }
 

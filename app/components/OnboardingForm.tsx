@@ -5,6 +5,8 @@ import { RadioGroup } from "@/app/components/RadioGroup";
 import { OnboardingFormValues } from "../types";
 import { ONBOARDING_QUESTIONS } from "@/app/onboarding-data";
 
+const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 export const OnboardingForm = () => {
   const { register, handleSubmit } = useForm<OnboardingFormValues>();
 
@@ -14,7 +16,7 @@ export const OnboardingForm = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, timezone }),
     });
 
     if (!res.ok) {
@@ -35,7 +37,7 @@ export const OnboardingForm = () => {
         ),
       )}
       <div className="text-base font-medium mt-4 w-fit">
-        <button className="flex h-12 w-full text-nowrap items-center justify-center gap-2 rounded-full bg-indigo-800 px-6 text-background transition-colors hover:bg-indigo-900 dark:hover:bg-[#ccc]">
+        <button className="flex h-12 w-full text-nowrap items-center justify-center gap-2 rounded-full bg-foreground px-6 text-background transition-colors hover:bg-indigo-900 dark:hover:bg-[#ccc]">
           Confirm and start
         </button>
       </div>
