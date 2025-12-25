@@ -4,11 +4,7 @@ import { neon } from "@neondatabase/serverless";
 
 export async function POST(req: Request) {
   const sql = neon(process.env.DATABASE_URL!);
-  const userId = (await cookies()).get("user_id")?.value;
-
-  if (!userId) {
-    return NextResponse.json({ error: "No user_id" }, { status: 401 });
-  }
+  const userId = (await cookies()).get("user_id")?.value || crypto.randomUUID();
 
   const body = await req.json();
 
@@ -53,5 +49,11 @@ export async function POST(req: Request) {
       active_hours = EXCLUDED.active_hours
   `;
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true }).cookies.set("user_id", userId, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: true,
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+  });
 }
