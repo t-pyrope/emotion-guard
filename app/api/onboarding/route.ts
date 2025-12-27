@@ -1,11 +1,14 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { neon } from "@neondatabase/serverless";
+import { sql } from "@/lib/db";
 
 export async function POST(req: Request) {
-  const sql = neon(process.env.DATABASE_URL!);
   const cookieStore = await cookies();
-  const userId = cookieStore.get("user_id")?.value || crypto.randomUUID();
+  const userId = cookieStore.get("user_id")?.value;
+
+  if (!userId) {
+    return NextResponse.json({ error: "No user_id" }, { status: 401 });
+  }
 
   const body = await req.json();
 

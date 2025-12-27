@@ -1,9 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
-import { neon } from "@neondatabase/serverless";
+import { sql } from "@/lib/db";
 
 export async function POST(req: Request) {
-  const sql = neon(process.env.DATABASE_URL!);
   const userId = (await cookies()).get("user_id")?.value;
 
   if (!userId) {
