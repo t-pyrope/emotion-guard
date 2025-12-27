@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { redirect } from "next/navigation";
 
 import { RadioGroup } from "@/app/components/RadioGroup";
+import { Button } from "@/app/components/Button";
 
 import { OnboardingFormValues } from "../types";
 import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
@@ -46,13 +47,7 @@ export const OnboardingForm = () => {
         ),
       )}
       <div className="text-base mt-4 flex gap-3 w-full items-center">
-        <button
-          disabled={!isValid}
-          className="flex font-medium h-12 text-nowrap items-center justify-center gap-2 rounded-full bg-foreground px-6 text-background transition-colors hover:bg-neutral-700 dark:hover:bg-[#ccc] disabled:bg-neutral-500"
-        >
-          Confirm and start
-        </button>
-
+        <Button isDisabled={!isValid} title="Confirm and start" />
         <p
           className={`text-muted-foreground transition-opacity duration-250 ${isValid ? "opacity-0" : "opacity-100"}`}
         >

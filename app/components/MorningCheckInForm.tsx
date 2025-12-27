@@ -1,8 +1,11 @@
 "use client";
 import { MorningCheckInValues } from "@/app/types";
 import { useForm } from "react-hook-form";
+import { redirect } from "next/navigation";
+
 import { MORNING_CHECK_IN_QUESTIONS } from "@/app/components/morning-check-in-questions";
 import { RadioGroup } from "@/app/components/RadioGroup";
+import { Button } from "@/app/components/Button";
 
 export const MorningCheckInForm = () => {
   const { register, handleSubmit } = useForm<MorningCheckInValues>();
@@ -16,8 +19,8 @@ export const MorningCheckInForm = () => {
       body: JSON.stringify({ ...data }),
     });
 
-    if (!res.ok) {
-      throw new Error("Failed to submit onboarding");
+    if (res.ok) {
+      redirect("/day-state");
     }
   };
 
@@ -35,9 +38,7 @@ export const MorningCheckInForm = () => {
       )}
 
       <div className="text-base font-medium w-fit">
-        <button className="flex h-12 w-full text-nowrap items-center justify-center gap-2 rounded-full bg-foreground px-6 text-background transition-colors hover:bg-indigo-900 dark:hover:bg-[#ccc]">
-          Submit
-        </button>
+        <Button isDisabled={false} title="Submit" />
       </div>
     </form>
   );
