@@ -4,12 +4,8 @@ import { redirect } from "next/navigation";
 import { DayStateSignal } from "@/app/components/DayStateSignal";
 import { sql } from "@/lib/db";
 import { computeDayState } from "@/app/day-state/utils";
-import {
-  MorningCheckinFromDB,
-  MorningCheckInValues,
-  SignalFromDB,
-  UserFromDB,
-} from "@/app/types";
+import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
+import { mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
 
 export default async function Page() {
   const userId = (await cookies()).get("user_id")?.value;
@@ -32,29 +28,21 @@ export default async function Page() {
     day: "2-digit",
   }).format(new Date());
 
-  const existing = (await sql`
+  const [morningFromDB] = await sql`
     SELECT 1
     FROM morning_checkins
     WHERE user_id = ${userId}
       AND checkin_date = ${today}
     LIMIT 1
-  `) as MorningCheckinFromDB[];
+  `;
 
-  if (existing.length < 1) {
+  if (!morningFromDB) {
     redirect("/morning-check-in");
   }
 
-  const morningFromBD = existing[0];
+  const morning = mapMorningFromDB(morningFromDB as MorningCheckinFromDB);
 
-  const morning: MorningCheckInValues = {
-    sleepLevel: morningFromBD.sleep_level,
-    bodyState: morningFromBD.body_state,
-    mentalState: morningFromBD.mental_state,
-    contactsExpected: morningFromBD.contacts_expected,
-    resourceLevel: morningFromBD.resource_level,
-  };
-
-  const signals = (await sql`
+  const signalsFromDB = (await sql`
     SELECT *
     FROM signals
     WHERE user_id = ${userId}
@@ -62,11 +50,9 @@ export default async function Page() {
     ORDER BY created_at ASC
   `) as SignalFromDB[];
 
-  const dayState = computeDayState(
-    morning,
-    signals.map((signal) => signal.signal_type),
-    user as UserFromDB,
-  );
+  const signals = signalsFromDB.map((signal) => mapSignalFromDB(signal));
+
+  const dayState = computeDayState(morning, signals, user as UserFromDB);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">

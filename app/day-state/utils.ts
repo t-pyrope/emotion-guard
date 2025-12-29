@@ -1,6 +1,7 @@
 import {
   DayState,
-  MorningCheckInValues,
+  MorningCheckin,
+  Signal,
   SignalType,
   UserFromDB,
 } from "@/app/types";
@@ -14,8 +15,8 @@ const SIGNAL_WEIGHTS: Record<SignalType, number> = {
 };
 
 export const computeDayState = (
-  morning: MorningCheckInValues,
-  signals: SignalType[],
+  morning: MorningCheckin,
+  signals: Signal[],
   user: UserFromDB,
 ): DayState => {
   // TODO: добавить учет Onboarding - main content, overload sources, action on overload, active hours
@@ -26,7 +27,7 @@ export const computeDayState = (
   loadScore += 3 - morning.resourceLevel;
 
   for (const signal of signals) {
-    loadScore += SIGNAL_WEIGHTS[signal] ?? 0;
+    loadScore += SIGNAL_WEIGHTS[signal.signalType] ?? 0;
   }
 
   let mode: DayState["mode"] = "normal";
