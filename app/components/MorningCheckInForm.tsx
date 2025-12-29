@@ -8,7 +8,11 @@ import { RadioGroup } from "@/app/components/RadioGroup";
 import { Button } from "@/app/components/Button";
 
 export const MorningCheckInForm = () => {
-  const { register, handleSubmit } = useForm<MorningCheckInValues>();
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<MorningCheckInValues>();
 
   const send = async (data: MorningCheckInValues) => {
     const res = await fetch("/api/morning-check-in", {
@@ -32,13 +36,20 @@ export const MorningCheckInForm = () => {
             options={answers}
             label={`${index + 1}. ${question}`}
             key={question}
-            {...register(radioGroupName)}
+            {...register(radioGroupName, {
+              required: true,
+            })}
           />
         ),
       )}
 
-      <div className="text-base font-medium w-fit">
-        <Button isDisabled={false} title="Submit" />
+      <div className="text-base mt-4 flex gap-3 w-full items-center">
+        <Button isDisabled={!isValid} title="Confirm and start" />
+        <p
+          className={`text-muted-foreground transition-opacity duration-250 ${isValid ? "opacity-0" : "opacity-100"}`}
+        >
+          Complete all sections to continue
+        </p>
       </div>
     </form>
   );
