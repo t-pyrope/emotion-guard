@@ -2,7 +2,7 @@
 
 import { FiBookmark } from "react-icons/fi";
 import { useState } from "react";
-import { Modal } from "@/app/components/Modal";
+import { SignalModal } from "@/app/components/SignalModal";
 
 export const DayStateSignal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -29,7 +29,7 @@ export const DayStateSignal = () => {
       >
         <FiBookmark size={22} />
       </button>
-      {isModalOpen && <Modal handleCloseModal={closeModal}>Hi</Modal>}
+      {isModalOpen && <SignalModal onClose={closeModal} />}
     </>
   );
 };
