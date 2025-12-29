@@ -5,10 +5,10 @@ import { DayStateSignal } from "@/app/components/DayStateSignal";
 import { sql } from "@/lib/db";
 import { computeDayState } from "@/app/day-state/utils";
 import {
-  MorningCheckinFromBD,
+  MorningCheckinFromDB,
   MorningCheckInValues,
-  SignalFromBD,
-  UserFromBD,
+  SignalFromDB,
+  UserFromDB,
 } from "@/app/types";
 
 export default async function Page() {
@@ -38,7 +38,7 @@ export default async function Page() {
     WHERE user_id = ${userId}
       AND checkin_date = ${today}
     LIMIT 1
-  `) as MorningCheckinFromBD[];
+  `) as MorningCheckinFromDB[];
 
   if (existing.length < 1) {
     redirect("/morning-check-in");
@@ -60,12 +60,12 @@ export default async function Page() {
     WHERE user_id = ${userId}
       AND created_at::date = ${today}
     ORDER BY created_at ASC
-  `) as SignalFromBD[];
+  `) as SignalFromDB[];
 
   const dayState = computeDayState(
     morning,
     signals.map((signal) => signal.signal_type),
-    user as UserFromBD,
+    user as UserFromDB,
   );
 
   return (

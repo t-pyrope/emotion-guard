@@ -2,7 +2,7 @@ import {
   DayState,
   MorningCheckInValues,
   SignalType,
-  UserFromBD,
+  UserFromDB,
 } from "@/app/types";
 
 const SIGNAL_WEIGHTS: Record<SignalType, number> = {
@@ -16,7 +16,7 @@ const SIGNAL_WEIGHTS: Record<SignalType, number> = {
 export const computeDayState = (
   morning: MorningCheckInValues,
   signals: SignalType[],
-  user: UserFromBD,
+  user: UserFromDB,
 ): DayState => {
   // TODO: добавить учет Onboarding - main content, overload sources, action on overload, active hours
   // TODO: Morning - body, mental, contacts expected
