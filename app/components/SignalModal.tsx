@@ -1,15 +1,30 @@
 import { IoClose } from "react-icons/io5";
+import { SignalType } from "@/app/types";
 
-const signals = [
-  "Interaction increased load",
-  "External pressure",
-  "Took on extra tasks",
-  "Didn't stop when needed",
-  "All good",
+const signals: { title: string; value: SignalType }[] = [
+  { title: "Interaction increased load", value: "interaction_load" },
+  { title: "External pressure", value: "external_pressure" },
+  { title: "Took on extra tasks", value: "took_extra" },
+  { title: "Didn't stop when needed", value: "ignored_warning" },
+  { title: "All good", value: "all_good" },
 ];
 
 export const SignalModal = ({ onClose }: { onClose: () => void }) => {
-  const handleSignalClick = (signal: string) => {};
+  const logSignal = async (signal: SignalType) => {
+    try {
+      await fetch("/api/signal", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ signal }),
+      });
+
+      onClose();
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -29,11 +44,11 @@ export const SignalModal = ({ onClose }: { onClose: () => void }) => {
         <div className="p-6 space-y-3">
           {signals.map((signal) => (
             <button
-              key={signal}
-              onClick={() => handleSignalClick(signal)}
-              className="w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-muted/50 transition-colors"
+              key={signal.value}
+              onClick={() => logSignal(signal.value)}
+              className="w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-100 transition-colors"
             >
-              {signal}
+              {signal.title}
             </button>
           ))}
         </div>

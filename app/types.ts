@@ -31,3 +31,10 @@ export interface MorningCheckInQuestion {
   radioGroupName: keyof MorningCheckInValues;
   answers: Answer[];
 }
+
+export type SignalType =
+  | "interaction_load"
+  | "external_pressure"
+  | "took_extra"
+  | "ignored_warning"
+  | "all_good";
