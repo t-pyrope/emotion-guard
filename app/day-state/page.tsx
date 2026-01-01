@@ -5,7 +5,8 @@ import { DayStateSignal } from "@/app/components/DayStateSignal";
 import { sql } from "@/lib/db";
 import { computeDayState } from "@/app/day-state/utils";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
-import { mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
+import { formatMode, mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
+import { RulesList } from "@/app/day-state/RulesList";
 
 export default async function Page() {
   const userId = (await cookies()).get("user_id")?.value;
@@ -14,8 +15,7 @@ export default async function Page() {
     redirect("/onboarding");
   }
 
-  const [user] =
-    await sql`SELECT 1 FROM users WHERE user_id = ${userId} LIMIT 1`;
+  const [user] = await sql`SELECT * FROM users WHERE user_id = ${userId}`;
 
   if (!user) {
     redirect("/onboarding");
@@ -29,7 +29,7 @@ export default async function Page() {
   }).format(new Date());
 
   const [morningFromDB] = await sql`
-    SELECT 1
+    SELECT *
     FROM morning_checkins
     WHERE user_id = ${userId}
       AND checkin_date = ${today}
@@ -66,7 +66,16 @@ export default async function Page() {
           </div>
         </div>
 
-        <div>{dayState.mode}</div>
+        <div className="space-y-8">
+          <div>
+            <h2 className="text-2xl font-medium">
+              Today’s mode: {formatMode(dayState.mode)}
+            </h2>
+          </div>
+
+          <RulesList rules={dayState.rules} />
+        </div>
+
         <DayStateSignal />
       </main>
     </div>
