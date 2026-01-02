@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { computeDayState } from "@/app/day-state/utils";
-import { SIGNALS } from "@/app/constants";
+import { SIGNALS_FLAT } from "@/app/constants";
 import { getUser } from "@/app/lib/getUser";
 import { Header } from "@/app/components/Header";
 
@@ -55,7 +55,7 @@ export default async function Page() {
 
   const signals = signalsFromDB.map((signal) => mapSignalFromDB(signal));
 
-  const signalsWithCount = SIGNALS.map((signal) => ({
+  const signalsWithCount = SIGNALS_FLAT.map((signal) => ({
     ...signal,
     count: signals.filter((sig) => sig.signalType === signal.value).length,
   }))

@@ -1,7 +1,7 @@
 "use client";
 
 import { FiActivity } from "react-icons/fi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoClose } from "react-icons/io5";
 import { SIGNALS } from "@/app/constants";
 import { SignalType } from "@/app/types";
@@ -12,6 +12,18 @@ export const DayStateSignal = ({
   logSignalAction: (signalType: SignalType) => void;
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (isModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isModalOpen]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -48,7 +60,7 @@ export const DayStateSignal = ({
               onClick={closeModal}
             />
 
-            <div className="relative bg-background border border-neutral-200 rounded-lg shadow-lg w-full max-w-md mx-4">
+            <div className="relative bg-background border border-neutral-200 rounded-lg shadow-lg w-full max-w-md mx-4 overflow-auto max-h-screen">
               <div className="flex items-center justify-between p-6 border-b border-neutral-200">
                 <h2>Log signal</h2>
                 <button
@@ -59,15 +71,20 @@ export const DayStateSignal = ({
                 </button>
               </div>
 
-              <div className="p-6 space-y-3">
-                {SIGNALS.map((signal) => (
-                  <button
-                    key={signal.value}
-                    onClick={() => logSignal(signal.value)}
-                    className="w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-100 transition-colors"
-                  >
-                    {signal.title}
-                  </button>
+              <div className="p-6 space-y-4">
+                {SIGNALS.map((signalGroup) => (
+                  <div key={signalGroup.title} className="space-y-2">
+                    <p>{signalGroup.title}</p>
+                    {signalGroup.signals.map((signal) => (
+                      <button
+                        key={signal.value}
+                        onClick={() => logSignal(signal.value)}
+                        className="w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-100 transition-colors"
+                      >
+                        {signal.title}
+                      </button>
+                    ))}
+                  </div>
                 ))}
               </div>
             </div>
