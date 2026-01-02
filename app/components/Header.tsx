@@ -12,7 +12,7 @@ export const Header = ({
         <h2 className=" text-4xl font-bold leading-10 tracking-tight text-black dark:text-zinc-50">
           {title}
         </h2>
-        {subtitle && <p className="mt-2 mb-10">{subtitle}</p>}
+        {subtitle && <p className="mt-2 mb-6">{subtitle}</p>}
       </div>
     </header>
   );
