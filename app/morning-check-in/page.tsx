@@ -2,6 +2,7 @@ import { MorningCheckInForm } from "@/app/components/MorningCheckInForm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
+import { getUser } from "@/app/lib/getUser";
 
 export default async function Page() {
   const userId = (await cookies()).get("user_id")?.value;
@@ -10,8 +11,7 @@ export default async function Page() {
     redirect("/onboarding");
   }
 
-  const [user] =
-    await sql`SELECT 1 FROM users WHERE user_id = ${userId} LIMIT 1`;
+  const user = await getUser(userId);
 
   if (!user) {
     redirect("/onboarding");

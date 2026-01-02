@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 import { sql } from "@/lib/db";
+import { getUser } from "@/app/lib/getUser";
 
 export async function PUT() {
   const userId = (await cookies()).get("user_id")?.value;
@@ -10,11 +11,7 @@ export async function PUT() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const [user] = await sql`
-    SELECT timezone
-    FROM users
-    WHERE user_id = ${userId}
-  `;
+  const user = await getUser(userId);
 
   if (!user) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });

@@ -8,6 +8,7 @@ import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { formatMode, mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
 import { RulesList } from "@/app/day-state/RulesList";
 import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
+import { getUser } from "@/app/lib/getUser";
 
 export default async function Page() {
   const userId = (await cookies()).get("user_id")?.value;
@@ -16,7 +17,7 @@ export default async function Page() {
     redirect("/onboarding");
   }
 
-  const [user] = await sql`SELECT * FROM users WHERE user_id = ${userId}`;
+  const user = await getUser(userId);
 
   if (!user) {
     redirect("/onboarding");

@@ -5,6 +5,7 @@ import { sql } from "@/lib/db";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { computeDayState } from "@/app/day-state/utils";
 import { SIGNALS } from "@/app/constants";
+import { getUser } from "@/app/lib/getUser";
 
 export default async function Page() {
   // TODO: System limited new input, Protective mode was
@@ -16,7 +17,7 @@ export default async function Page() {
     redirect("/onboarding");
   }
 
-  const [user] = await sql`SELECT * FROM users WHERE user_id = ${userId}`;
+  const user = await getUser(userId);
 
   if (!user) {
     redirect("/onboarding");
