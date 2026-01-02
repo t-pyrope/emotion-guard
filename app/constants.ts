@@ -19,4 +19,12 @@ export const SIGNALS: {
   },
 ];
 
+export const SIGNALS_DAILY_SUMMARY: { [key in SignalType]: string } = {
+  interaction_load: "Interactions required extra energy",
+  external_pressure: "External demands were high",
+  took_extra: "Extra responsibilities appeared",
+  ignored_warning: "Rest didn’t happen when needed",
+  all_good: "You regained energy",
+};
+
 export const SIGNALS_FLAT = SIGNALS.map((signal) => signal.signals).flat();

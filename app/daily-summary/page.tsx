@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { computeDayState } from "@/app/day-state/utils";
-import { SIGNALS_FLAT } from "@/app/constants";
+import { SIGNALS_DAILY_SUMMARY, SIGNALS_FLAT } from "@/app/constants";
 import { getUser } from "@/app/lib/getUser";
 import { Header } from "@/app/components/Header";
 
@@ -70,14 +70,14 @@ export default async function Page() {
         <Header title="Daily summary" />
         <div className="w-full">
           <div className="flex flex-col gap-2">
-            <div>The system operated in {formatMode(dayState.mode)}</div>
+            <div>The system stayed in {formatMode(dayState.mode)} today</div>
             <div>
               {signalsWithCount.length > 0 ? (
                 <>
                   <p>Signals registered: </p>
                   {signalsWithCount.map((signal) => (
                     <p key={signal.value}>
-                      {signal.title}: {signal.count}
+                      {SIGNALS_DAILY_SUMMARY[signal.value]}
                     </p>
                   ))}
                 </>

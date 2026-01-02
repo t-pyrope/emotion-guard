@@ -12,7 +12,7 @@ export const RadioGroup = ({
 } & Partial<UseFormRegisterReturn<string>>) => {
   return (
     <div className="space-y-2 w-full" role="radiogroup">
-      <h4 className="block text-lg">{label}</h4>
+      <h4 className="block">{label}</h4>
       <div className="space-y-2">
         {options.map((option) => {
           const id = `${inputProps.name}-${option.value}`;
