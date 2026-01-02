@@ -35,9 +35,9 @@ export const OnboardingForm = () => {
   return (
     <form onSubmit={handleSubmit(send)} className="flex flex-col gap-10 w-full">
       {ONBOARDING_QUESTIONS.map(
-        ({ question, answers, radioGroupName }, index) => (
+        ({ question, answers, radioGroupName }, index, arr) => (
           <RadioGroup
-            label={`${index + 1}. ${question}`}
+            label={`Step ${index + 1} of ${arr.length}. ${question}`}
             key={question}
             options={answers}
             {...register(radioGroupName, {

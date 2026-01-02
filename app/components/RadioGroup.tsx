@@ -11,7 +11,7 @@ export const RadioGroup = ({
   label: string;
 } & Partial<UseFormRegisterReturn<string>>) => {
   return (
-    <div className="space-y-4 w-full" role="radiogroup">
+    <div className="space-y-2 w-full" role="radiogroup">
       <h4 className="block text-lg">{label}</h4>
       <div className="space-y-2">
         {options.map((option) => {

@@ -31,10 +31,10 @@ export const MorningCheckInForm = () => {
   return (
     <form onSubmit={handleSubmit(send)} className="flex flex-col gap-10 w-full">
       {MORNING_CHECK_IN_QUESTIONS.map(
-        ({ question, answers, radioGroupName }, index) => (
+        ({ question, answers, radioGroupName }, index, arr) => (
           <RadioGroup
             options={answers}
-            label={`${index + 1}. ${question}`}
+            label={`Step ${index + 1} of ${arr.length}. ${question}`}
             key={question}
             {...register(radioGroupName, {
               required: true,
