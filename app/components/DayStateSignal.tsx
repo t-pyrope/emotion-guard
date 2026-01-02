@@ -1,6 +1,6 @@
 "use client";
 
-import { FiBookmark } from "react-icons/fi";
+import { FiActivity } from "react-icons/fi";
 import { useState } from "react";
 import { SignalModal } from "@/app/components/SignalModal";
 
@@ -27,7 +27,7 @@ export const DayStateSignal = () => {
   "
         aria-label="Log signal"
       >
-        <FiBookmark size={22} />
+        <FiActivity size={22} />
       </button>
       {isModalOpen && <SignalModal onClose={closeModal} />}
     </>

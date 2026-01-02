@@ -31,9 +31,9 @@ export default async function Page() {
 
   const [morningFromDB] = await sql`
     SELECT *
-    FROM morning_checkins
+    FROM day_sessions
     WHERE user_id = ${userId}
-      AND checkin_date = ${today}
+      AND day_date = ${today}
     LIMIT 1
   `;
 

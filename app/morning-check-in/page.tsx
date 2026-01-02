@@ -26,9 +26,9 @@ export default async function Page() {
 
   const existing = await sql`
     SELECT 1
-    FROM morning_checkins
+    FROM day_sessions
     WHERE user_id = ${userId}
-      AND checkin_date = ${checkinDate}
+      AND day_date = ${checkinDate}
     LIMIT 1
   `;
 

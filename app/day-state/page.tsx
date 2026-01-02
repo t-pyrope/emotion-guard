@@ -7,6 +7,7 @@ import { computeDayState } from "@/app/day-state/utils";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { formatMode, mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
 import { RulesList } from "@/app/day-state/RulesList";
+import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
 
 export default async function Page() {
   const userId = (await cookies()).get("user_id")?.value;
@@ -30,14 +31,16 @@ export default async function Page() {
 
   const [morningFromDB] = await sql`
     SELECT *
-    FROM morning_checkins
+    FROM day_sessions
     WHERE user_id = ${userId}
-      AND checkin_date = ${today}
+      AND day_date = ${today}
     LIMIT 1
   `;
 
   if (!morningFromDB) {
     redirect("/morning-check-in");
+  } else if (morningFromDB.state === "closed") {
+    redirect("/daily-summary");
   }
 
   const morning = mapMorningFromDB(morningFromDB as MorningCheckinFromDB);
@@ -74,6 +77,8 @@ export default async function Page() {
           </div>
 
           <RulesList rules={dayState.rules} />
+
+          <CloseTheDayButton />
         </div>
 
         <DayStateSignal />

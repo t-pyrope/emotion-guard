@@ -5,5 +5,5 @@ export const SIGNALS: { title: string; value: SignalType }[] = [
   { title: "External pressure", value: "external_pressure" },
   { title: "Took on extra tasks", value: "took_extra" },
   { title: "Didn't stop when needed", value: "ignored_warning" },
-  { title: "All good", value: "all_good" },
+  { title: "Regained energy", value: "all_good" },
 ];

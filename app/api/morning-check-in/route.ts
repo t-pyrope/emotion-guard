@@ -21,6 +21,10 @@ export async function POST(req: Request) {
 
   const [user] = await sql`SELECT * FROM users WHERE user_id  = ${userId}`;
 
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 404 });
+  }
+
   const checkinDate = new Intl.DateTimeFormat("en-CA", {
     timeZone: user.timezone,
     year: "numeric",
@@ -29,9 +33,9 @@ export async function POST(req: Request) {
   }).format(new Date());
 
   await sql`
-        INSERT INTO morning_checkins (
+        INSERT INTO day_sessions (
             user_id,
-            checkin_date,
+            day_date,
             sleep_level,
             body_state,
             mental_state,
@@ -46,7 +50,7 @@ export async function POST(req: Request) {
             ${contactsExpected},
             ${resourceLevel}
         )
-        ON CONFLICT (user_id, checkin_date)
+        ON CONFLICT (user_id, day_date)
         DO UPDATE SET
             sleep_level = EXCLUDED.sleep_level,
             body_state = EXCLUDED.body_state,
