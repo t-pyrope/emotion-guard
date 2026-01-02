@@ -2,8 +2,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import { sql } from "@/lib/db";
-import { computeDayState } from "@/app/day-state/utils";
-import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
+import { MorningCheckinFromDB, SignalFromDB } from "@/app/types";
 import { mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
 import { getUser } from "@/app/lib/getUser";
 import { Header } from "@/app/components/Header";
@@ -55,14 +54,12 @@ export default async function Page() {
 
   const signals = signalsFromDB.map((signal) => mapSignalFromDB(signal));
 
-  const dayState = computeDayState(morning, signals, user as UserFromDB);
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
         <Header title="Day state / rules of the day" />
 
-        <DayStateBody signals={signals} dayState={dayState} />
+        <DayStateBody signals={signals} morning={morning} user={user} />
       </main>
     </div>
   );

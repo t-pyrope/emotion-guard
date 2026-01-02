@@ -4,16 +4,22 @@ import { formatMode } from "@/app/utils";
 import { RulesList } from "@/app/day-state/RulesList";
 import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
 import { DayStateSignal } from "@/app/components/DayStateSignal";
-import { DayState, Signal, SignalType } from "@/app/types";
+import { MorningCheckin, Signal, SignalType, UserFromDB } from "@/app/types";
 import { useState } from "react";
+import { computeDayState } from "@/app/day-state/utils";
 
 export const DayStateBody = ({
   signals,
-  dayState,
+  morning,
+  user,
 }: {
   signals: Signal[];
-  dayState: DayState;
+  morning: MorningCheckin;
+  user: UserFromDB;
 }) => {
+  const [dayState, setDayState] = useState(() => {
+    return computeDayState(morning, signals, user);
+  });
   const [signalsLocal, setSignalsLocal] = useState<Signal[]>(signals);
 
   const logSignal = async (signal: SignalType) => {
@@ -29,7 +35,14 @@ export const DayStateBody = ({
       const json = await res.json();
 
       if ("id" in json && json.id && typeof json.id === "string") {
-        setSignalsLocal([{ id: json.id, signalType: signal }, ...signalsLocal]);
+        const newSignalsLocal = [
+          { id: json.id, signalType: signal },
+          ...signalsLocal,
+        ];
+        const newDayState = computeDayState(morning, newSignalsLocal, user);
+
+        setDayState(newDayState);
+        setSignalsLocal(newSignalsLocal);
       }
     } catch (e) {
       console.error(e);
