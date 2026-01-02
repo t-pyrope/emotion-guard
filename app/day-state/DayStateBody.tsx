@@ -1,12 +1,12 @@
 "use client";
 
-import { formatMode } from "@/app/utils";
 import { RulesList } from "@/app/day-state/RulesList";
 import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
 import { DayStateSignal } from "@/app/components/DayStateSignal";
 import { MorningCheckin, Signal, SignalType, UserFromDB } from "@/app/types";
 import { useState } from "react";
 import { computeDayState } from "@/app/day-state/utils";
+import { formatModeWithSubtitle } from "@/app/utils/formatModeWithSubtitle";
 
 export const DayStateBody = ({
   signals,
@@ -49,13 +49,14 @@ export const DayStateBody = ({
     }
   };
 
+  const mode = formatModeWithSubtitle(dayState.mode);
+
   return (
     <>
       <div className="space-y-8">
-        <div>
-          <h2 className="text-2xl font-medium">
-            Today’s mode: {formatMode(dayState.mode)}
-          </h2>
+        <div className="space-y-1 font-medium">
+          <h2>Today’s mode: {mode.title}</h2>
+          <p>{mode.subtitle}</p>
         </div>
 
         <RulesList rules={dayState.rules} />
