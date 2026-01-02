@@ -25,6 +25,7 @@ export interface SignalFromDB {
   signal_type: SignalType;
   created_at: string;
 }
+
 export interface MorningCheckinFromDB {
   id: string;
   user_id: string;

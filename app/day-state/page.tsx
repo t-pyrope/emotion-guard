@@ -1,15 +1,13 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { DayStateSignal } from "@/app/components/DayStateSignal";
 import { sql } from "@/lib/db";
 import { computeDayState } from "@/app/day-state/utils";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
-import { formatMode, mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
-import { RulesList } from "@/app/day-state/RulesList";
-import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
+import { mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
 import { getUser } from "@/app/lib/getUser";
 import { Header } from "@/app/components/Header";
+import { DayStateBody } from "@/app/day-state/DayStateBody";
 
 export default async function Page() {
   const userId = (await cookies()).get("user_id")?.value;
@@ -64,19 +62,7 @@ export default async function Page() {
       <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
         <Header title="Day state / rules of the day" />
 
-        <div className="space-y-8">
-          <div>
-            <h2 className="text-2xl font-medium">
-              Today’s mode: {formatMode(dayState.mode)}
-            </h2>
-          </div>
-
-          <RulesList rules={dayState.rules} />
-
-          <CloseTheDayButton />
-        </div>
-
-        <DayStateSignal />
+        <DayStateBody signals={signals} dayState={dayState} />
       </main>
     </div>
   );

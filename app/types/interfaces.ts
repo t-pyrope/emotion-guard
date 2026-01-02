@@ -20,6 +20,6 @@ export interface DayState {
 
 export type User = Camelize<UserFromDB>;
 
-export type Signal = Camelize<SignalFromDB>;
+export type Signal = Omit<Camelize<SignalFromDB>, "userId" | "createdAt">;
 
 export type MorningCheckin = Camelize<MorningCheckinFromDB>;

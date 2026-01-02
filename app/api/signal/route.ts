@@ -14,10 +14,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No signal" }, { status: 400 });
   }
 
-  await sql`
+  const [row] = await sql`
     INSERT INTO signals (user_id, signal_type)
     VALUES (${userId}, ${signal})
+    RETURNING id;
   `;
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ id: row.id });
 }
