@@ -36,7 +36,10 @@ export default async function Page() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
-        <Header title="Onboarding" />
+        <Header
+          title="Onboarding"
+          subtitle="This helps adapt the system to your working rhythm."
+        />
 
         <div className="w-full">
           <OnboardingForm />
