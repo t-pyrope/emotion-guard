@@ -11,12 +11,15 @@ export function RulesList({ rules }: { rules: DayState["rules"] }) {
   }
 
   return (
-    <ol className="space-y-1 list-decimal ml-6">
-      {messages.map((text) => (
-        <li key={text}>
-          <span>{text}</span>
-        </li>
-      ))}
-    </ol>
+    <div className="space-y-2">
+      <p>Suggestions for today:</p>
+      <ol className="space-y-1 list-decimal ml-6">
+        {messages.map((text) => (
+          <li key={text}>
+            <span>{text}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
