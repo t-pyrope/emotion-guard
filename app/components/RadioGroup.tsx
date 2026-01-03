@@ -1,40 +1,41 @@
+"use client";
 import { UseFormRegisterReturn } from "react-hook-form";
 
 import { Answer } from "@/app/types";
+import { RadioButton } from "@/app/components/RadioButton";
+import { useState } from "react";
 
 export const RadioGroup = ({
   options,
   label,
-  ...inputProps
+  ...rest
 }: {
   options: Answer[];
   label: string;
 } & Partial<UseFormRegisterReturn<string>>) => {
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const inputProps = {
+    ...(rest ?? {}),
+    onChange: async (event: { target: HTMLInputElement }) => {
+      const isNumber = Number.isFinite(options[0].value);
+
+      rest?.onChange?.(event);
+      setSelectedId(isNumber ? +event.target.value : event.target.value);
+    },
+  };
   return (
     <div className="space-y-2 w-full" role="radiogroup">
       <h4 className="block">{label}</h4>
       <div className="space-y-2">
-        {options.map((option) => {
-          const id = `${inputProps.name}-${option.value}`;
-          return (
-            <label
-              key={id}
-              htmlFor={id}
-              className="flex items-center gap-3 p-4 border border-neutral-200 rounded-lg cursor-pointer transition-colors hover:bg-muted/50"
-            >
-              <input
-                type="radio"
-                id={id}
-                value={option.value}
-                className="w-4 h-4 accent-indigo-700 peer"
-                {...(inputProps || {})}
-              />
-              <span className="flex-1 peer-checked:text-indigo-700">
-                {option.label}
-              </span>
-            </label>
-          );
-        })}
+        {options.map((option) => (
+          <RadioButton
+            key={option.label}
+            value={option.value}
+            label={option.label}
+            isChecked={selectedId === option.value}
+            {...(inputProps ?? {})}
+          />
+        ))}
       </div>
     </div>
   );
