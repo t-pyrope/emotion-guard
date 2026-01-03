@@ -74,7 +74,6 @@ export default async function Page() {
             <div>
               {signalsWithCount.length > 0 ? (
                 <>
-                  <p>Signals registered: </p>
                   {signalsWithCount.map((signal) => (
                     <p key={signal.value}>
                       {SIGNALS_DAILY_SUMMARY[signal.value]}
