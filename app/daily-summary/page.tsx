@@ -9,9 +9,6 @@ import { getUser } from "@/app/lib/getUser";
 import { Header } from "@/app/components/Header";
 
 export default async function Page() {
-  // TODO: System limited new input, Protective mode was
-  //               activated, No restrictions were applied
-
   const userId = (await cookies()).get("user_id")?.value;
 
   if (!userId) {
@@ -31,7 +28,7 @@ export default async function Page() {
     day: "2-digit",
   }).format(new Date());
 
-  const [morningFromDB] = await sql`
+  const [daySessionFromDB] = await sql`
     SELECT *
     FROM day_sessions
     WHERE user_id = ${userId}
@@ -39,11 +36,15 @@ export default async function Page() {
     LIMIT 1
   `;
 
-  if (!morningFromDB) {
+  if (!daySessionFromDB) {
     redirect("/morning-check-in");
   }
 
-  const morning = mapMorningFromDB(morningFromDB as MorningCheckinFromDB);
+  const morning = mapMorningFromDB(daySessionFromDB as MorningCheckinFromDB);
+
+  if (morning.state === "open") {
+    redirect("/day-state");
+  }
 
   const signalsFromDB = (await sql`
     SELECT *

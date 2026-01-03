@@ -16,8 +16,9 @@ export const mapMorningFromDB = (
     resourceLevel: morningFromDB.resource_level,
     id: morningFromDB.id,
     userId: morningFromDB.id,
-    checkinDate: morningFromDB.checkin_date,
+    dayDate: morningFromDB.day_date,
     createdAt: morningFromDB.created_at,
+    state: morningFromDB.state,
   };
 };
 

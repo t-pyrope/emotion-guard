@@ -29,11 +29,12 @@ export interface SignalFromDB {
 export interface MorningCheckinFromDB {
   id: string;
   user_id: string;
-  checkin_date: string;
+  day_date: string;
   sleep_level: 1 | 2 | 3;
   body_state: 1 | 2 | 3;
   mental_state: 1 | 2 | 3;
   contacts_expected: 1 | 2 | 3;
   resource_level: 1 | 2 | 3;
   created_at: string;
+  state: "open" | "closed";
 }
