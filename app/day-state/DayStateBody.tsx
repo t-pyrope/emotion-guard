@@ -7,6 +7,7 @@ import { MorningCheckin, Signal, SignalType, UserFromDB } from "@/app/types";
 import { useState } from "react";
 import { computeDayState } from "@/app/day-state/utils";
 import { formatModeWithSubtitle } from "@/app/utils/formatModeWithSubtitle";
+import { LoadingBar } from "@/app/components/LoadingBar";
 
 export const DayStateBody = ({
   signals,
@@ -21,8 +22,11 @@ export const DayStateBody = ({
     return computeDayState(morning, signals, user);
   });
   const [signalsLocal, setSignalsLocal] = useState<Signal[]>(signals);
+  const [isLoading, setIsLoading] = useState(false);
 
   const logSignal = async (signal: SignalType) => {
+    setIsLoading(true);
+
     try {
       const res = await fetch("/api/signal", {
         method: "POST",
@@ -46,6 +50,8 @@ export const DayStateBody = ({
       }
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -53,6 +59,7 @@ export const DayStateBody = ({
 
   return (
     <>
+      {isLoading && <LoadingBar />}
       <div className="space-y-8">
         <div className="space-y-1 font-medium">
           <h2>Today’s mode: {mode.title}</h2>
