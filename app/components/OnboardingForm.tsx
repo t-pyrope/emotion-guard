@@ -47,7 +47,7 @@ export const OnboardingForm = () => {
         ),
       )}
       <div className="text-base mt-4 flex gap-3 w-full items-center">
-        <Button isDisabled={!isValid} title="Confirm and start" />
+        <Button isDisabled={!isValid} title="Start using Signal" />
         <p
           className={`text-muted-foreground transition-opacity duration-250 ${isValid ? "opacity-0" : "opacity-100"}`}
         >
