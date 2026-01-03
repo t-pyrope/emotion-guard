@@ -38,7 +38,7 @@ export default async function Page() {
       <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
         <Header
           title="Onboarding"
-          subtitle="This helps adapt the system to your working rhythm."
+          subtitle="A few questions to adjust the system to you."
         />
 
         <div className="w-full">
