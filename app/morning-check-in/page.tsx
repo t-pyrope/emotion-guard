@@ -42,7 +42,7 @@ export default async function Page() {
       <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
         <Header
           title="Morning check-in"
-          subtitle="Quick check-in to adjust today’s recommendations"
+          subtitle="A quick check-in to adjust today’s suggestions."
         />
         <div className="w-full">
           <MorningCheckInForm />
