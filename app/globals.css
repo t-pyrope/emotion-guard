@@ -48,3 +48,25 @@ button:disabled {
 .animate-progress {
   animation: progress 1.2s ease-in-out infinite;
 }
+
+@keyframes draw {
+  0% {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    stroke-dasharray: 200;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.signal-path {
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: draw 1.2s ease-out forwards;
+}
