@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Signal — daily self-regulation system",
+  title: "Daily Signal — daily self-regulation system",
   description:
     "A lightweight system for daily self-regulation. Morning check-ins, adaptive daily rules, and simple signals to prevent overload.",
 };
