@@ -41,11 +41,11 @@ export const DayStateSignal = ({
         className="
     fixed bottom-15 right-15 z-50
     h-12 w-12 rounded-full
-    bg-neutral-900 text-white
+    bg-neutral-800 text-white
     flex items-center justify-center
-    shadow-lg
-    transition
-    hover:bg-neutral-800
+    shadow-lg hover:scale-[1.01]
+    transition-all
+    hover:bg-neutral-950
     active:scale-95
   "
         aria-label="Log signal"

@@ -12,7 +12,7 @@ export const FormProgress = <T, V extends { radioGroupName: keyof T }>({
   const progress = (completedSteps / totalSteps) * 100;
 
   return (
-    <div className="space-y-1 sticky top-0 bg-white py-3">
+    <div className="space-y-1 sticky top-0 bg-white py-3 z-1">
       <div className="text-sm text-muted-foreground">
         Step {completedSteps} of {totalSteps}
       </div>
