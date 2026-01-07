@@ -25,7 +25,7 @@ export const OnboardingForm = () => {
   const values = watch();
 
   const send = async (data: OnboardingFormValues) => {
-    const res = await fetch("/api/onboarding", {
+    const res = await fetch("/api/users", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

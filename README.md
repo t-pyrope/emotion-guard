@@ -37,7 +37,7 @@ Not conversational well-being tool, but an engine of limits.
 - `created_at`
 
 ## Serverless Routes
-- `POST /api/onboarding` - user creation
+- `POST /api/users` - user creation
 - `POST /api/morning-check-in` - morning check-in
 - `POST /api/signal` - log signal
 - `PUT /api/close-the-day` - open → closed
