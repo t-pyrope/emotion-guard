@@ -9,6 +9,7 @@ import { Button } from "@/app/components/Button";
 import { OnboardingFormValues } from "../types";
 import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
 import { FormProgress } from "@/app/components/FormProgress";
+import { QuestionHint } from "@/app/components/QuestionHint";
 
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -48,6 +49,7 @@ export const OnboardingForm = () => {
             key={question}
             label={`Step ${index + 1} of ${arr.length}. ${question}`}
             options={answers}
+            hint={<QuestionHint listItems={answers} />}
             {...register(radioGroupName, { required: true })}
           />
         ),

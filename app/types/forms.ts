@@ -1,6 +1,7 @@
 export interface Answer {
   value: string | number;
   label: string;
+  hint: string;
 }
 
 export interface OnboardingQuestion {
