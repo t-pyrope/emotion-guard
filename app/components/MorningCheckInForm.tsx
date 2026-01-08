@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 
 import { MORNING_CHECK_IN_QUESTIONS } from "@/app/components/morning-check-in-questions";
 import { RadioGroup } from "@/app/components/RadioGroup";
-import { Button } from "@/app/components/Button";
+import { Button } from "@/app/components/buttons/Button";
 import { FormProgress } from "@/app/components/FormProgress";
 import { QuestionHint } from "@/app/components/QuestionHint";
 

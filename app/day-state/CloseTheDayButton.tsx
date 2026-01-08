@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@/app/components/Button";
+import { Button } from "@/app/components/buttons/Button";
 import { redirect } from "next/navigation";
 
 export const CloseTheDayButton = () => {

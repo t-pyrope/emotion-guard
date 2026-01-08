@@ -1,6 +1,6 @@
 import { Modal } from "@/app/components/modals/Modal";
 import { ONBOARDING_QUESTIONS } from "@/app/components/onboarding-questions";
-import { Button } from "@/app/components/Button";
+import { Button } from "@/app/components/buttons/Button";
 import { User } from "@/app/types";
 
 export const SettingsModal = ({

@@ -4,12 +4,12 @@ import { useForm } from "react-hook-form";
 import { redirect } from "next/navigation";
 
 import { RadioGroup } from "@/app/components/RadioGroup";
-import { Button } from "@/app/components/Button";
+import { Button } from "@/app/components/buttons/Button";
+import { FormProgress } from "@/app/components/FormProgress";
+import { QuestionHint } from "@/app/components/QuestionHint";
 
 import { OnboardingFormValues } from "../types";
 import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
-import { FormProgress } from "@/app/components/FormProgress";
-import { QuestionHint } from "@/app/components/QuestionHint";
 
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 

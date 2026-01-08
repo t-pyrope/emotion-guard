@@ -18,7 +18,7 @@ export const Modal = ({
         onClick={onCloseModalAction}
       />
 
-      <div className="relative bg-background border border-neutral-200 rounded-lg shadow-lg w-full max-w-md mx-4 overflow-auto max-h-screen">
+      <div className="relative bg-background border border-neutral-200 rounded-lg shadow-lg w-full max-w-md mx-4 overflow-auto max-h-(--98vh)">
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
           <h2>{title}</h2>
           <button
