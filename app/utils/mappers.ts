@@ -3,6 +3,8 @@ import {
   MorningCheckinFromDB,
   Signal,
   SignalFromDB,
+  User,
+  UserFromDB,
 } from "@/app/types";
 
 export const mapMorningFromDB = (
@@ -26,5 +28,19 @@ export const mapSignalFromDB = (signalFromDB: SignalFromDB): Signal => {
   return {
     id: signalFromDB.id,
     signalType: signalFromDB.signal_type,
+  };
+};
+
+export const mapUserFromDB = (userFromDB: UserFromDB): User => {
+  return {
+    actionOnOverload: userFromDB.action_on_overload,
+    activeHours: userFromDB.active_hours,
+    mainContext: userFromDB.main_context,
+    overloadSources: userFromDB.overload_sources,
+    userId: userFromDB.user_id,
+    createdAt: userFromDB.created_at,
+    timezone: userFromDB.timezone,
+    strictnessLevel: userFromDB.strictness_level,
+    typicalDailyLoad: userFromDB.typical_daily_load,
   };
 };

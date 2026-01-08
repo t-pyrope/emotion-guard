@@ -3,7 +3,7 @@ import {
   MorningCheckin,
   Signal,
   SignalType,
-  UserFromDB,
+  User,
 } from "@/app/types";
 
 const SIGNAL_WEIGHTS: Record<SignalType, number> = {
@@ -17,7 +17,7 @@ const SIGNAL_WEIGHTS: Record<SignalType, number> = {
 export const computeDayState = (
   morning: MorningCheckin,
   signals: Signal[],
-  user: UserFromDB,
+  user: User,
 ): DayState => {
   // TODO: добавить учет Onboarding - main content, overload sources, action on overload, active hours
   // TODO: Morning - body, mental, contacts expected
@@ -32,17 +32,17 @@ export const computeDayState = (
 
   let mode: DayState["mode"] = "normal";
 
-  if (user.strictness_level === "gentle") {
+  if (user.strictnessLevel === "gentle") {
     if (loadScore >= 4) mode = "limited";
     if (loadScore >= 6) mode = "protected";
   }
 
-  if (user.strictness_level === "standard") {
+  if (user.strictnessLevel === "standard") {
     if (loadScore >= 3) mode = "limited";
     if (loadScore >= 5) mode = "protected";
   }
 
-  if (user.strictness_level === "strict") {
+  if (user.strictnessLevel === "strict") {
     if (loadScore >= 2) mode = "limited";
     if (loadScore >= 4) mode = "protected";
   }

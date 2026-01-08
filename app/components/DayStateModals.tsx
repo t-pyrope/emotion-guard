@@ -3,15 +3,19 @@
 import { FiActivity } from "react-icons/fi";
 import { FiSettings } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { SignalType } from "@/app/types";
+import { SignalType, User } from "@/app/types";
 import { LogSignalModal } from "@/app/components/modals/LogSignalModal";
+import { SettingsModal } from "@/app/components/modals/SettingsModal";
 
-export const DayStateSignal = ({
+export const DayStateModals = ({
   logSignalAction,
+  user,
 }: {
   logSignalAction: (signalType: SignalType) => void;
+  user: User;
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modal, setModal] = useState<null | "log-signal" | "settings">(null);
+  const isModalOpen = !!modal;
 
   useEffect(() => {
     if (isModalOpen) {
@@ -26,18 +30,18 @@ export const DayStateSignal = ({
   }, [isModalOpen]);
 
   const closeModal = () => {
-    setIsModalOpen(false);
+    setModal(null);
   };
 
   const logSignal = (signalType: SignalType) => {
     logSignalAction(signalType);
-    setIsModalOpen(false);
+    setModal(null);
   };
 
   return (
     <>
       <button
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => setModal("log-signal")}
         className="
     fixed bottom-15 right-15 z-50
     h-12 w-12 rounded-full
@@ -60,11 +64,15 @@ export const DayStateSignal = ({
       hover:scale-[1.02] hover:text-neutral-700
       transition-all active:scale-95
       "
+        onClick={() => setModal("settings")}
       >
         <FiSettings size={20} />
       </button>
-      {isModalOpen && (
+      {modal === "log-signal" && (
         <LogSignalModal onCloseModal={closeModal} logSignal={logSignal} />
+      )}
+      {modal === "settings" && (
+        <SettingsModal onCloseModal={closeModal} user={user} />
       )}
     </>
   );

@@ -2,8 +2,8 @@
 
 import { RulesList } from "@/app/day-state/RulesList";
 import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
-import { DayStateSignal } from "@/app/components/DayStateSignal";
-import { MorningCheckin, Signal, SignalType, UserFromDB } from "@/app/types";
+import { DayStateModals } from "@/app/components/DayStateModals";
+import { MorningCheckin, Signal, SignalType, User } from "@/app/types";
 import { useState } from "react";
 import { computeDayState } from "@/app/day-state/utils";
 import { formatModeWithSubtitle } from "@/app/utils/formatModeWithSubtitle";
@@ -16,7 +16,7 @@ export const DayStateBody = ({
 }: {
   signals: Signal[];
   morning: MorningCheckin;
-  user: UserFromDB;
+  user: User;
 }) => {
   const [dayState, setDayState] = useState(() => {
     return computeDayState(morning, signals, user);
@@ -71,7 +71,7 @@ export const DayStateBody = ({
         <CloseTheDayButton />
       </div>
 
-      <DayStateSignal logSignalAction={logSignal} />
+      <DayStateModals logSignalAction={logSignal} user={user} />
     </>
   );
 };
