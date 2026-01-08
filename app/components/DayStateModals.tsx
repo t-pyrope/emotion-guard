@@ -4,17 +4,20 @@ import { useRouter } from "next/navigation";
 import { FiActivity, FiSun } from "react-icons/fi";
 import { FiSettings } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { SignalType, User } from "@/app/types";
+import { MorningCheckin, SignalType, User } from "@/app/types";
 import { LogSignalModal } from "@/app/components/modals/LogSignalModal";
 import { SettingsModal } from "@/app/components/modals/SettingsModal";
 import { IconButton } from "@/app/components/buttons/IconButton";
+import { MorningSnapshotModal } from "@/app/components/modals/MorningSnapshotModal";
 
 export const DayStateModals = ({
   logSignalAction,
   user,
+  morning,
 }: {
   logSignalAction: (signalType: SignalType) => void;
   user: User;
+  morning: MorningCheckin;
 }) => {
   const [modal, setModal] = useState<
     null | "log-signal" | "settings" | "morning"
@@ -87,12 +90,17 @@ export const DayStateModals = ({
       {modal === "log-signal" && (
         <LogSignalModal onCloseModal={closeModal} logSignal={logSignal} />
       )}
+
       {modal === "settings" && (
         <SettingsModal
           onCloseModal={closeModal}
           user={user}
           resetData={resetData}
         />
+      )}
+
+      {modal === "morning" && (
+        <MorningSnapshotModal onCloseModal={closeModal} morning={morning} />
       )}
     </>
   );

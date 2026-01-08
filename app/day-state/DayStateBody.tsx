@@ -71,7 +71,11 @@ export const DayStateBody = ({
         <CloseTheDayButton />
       </div>
 
-      <DayStateModals logSignalAction={logSignal} user={user} />
+      <DayStateModals
+        logSignalAction={logSignal}
+        user={user}
+        morning={morning}
+      />
     </>
   );
 };
