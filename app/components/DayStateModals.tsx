@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { FiActivity } from "react-icons/fi";
 import { FiSettings } from "react-icons/fi";
 import { useEffect, useState } from "react";
@@ -16,6 +17,7 @@ export const DayStateModals = ({
 }) => {
   const [modal, setModal] = useState<null | "log-signal" | "settings">(null);
   const isModalOpen = !!modal;
+  const router = useRouter();
 
   useEffect(() => {
     if (isModalOpen) {
@@ -36,6 +38,21 @@ export const DayStateModals = ({
   const logSignal = (signalType: SignalType) => {
     logSignalAction(signalType);
     setModal(null);
+  };
+
+  const resetData = async () => {
+    try {
+      const res = await fetch("/api/user", {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        closeModal();
+        router.replace("/onboarding");
+      }
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -72,7 +89,11 @@ export const DayStateModals = ({
         <LogSignalModal onCloseModal={closeModal} logSignal={logSignal} />
       )}
       {modal === "settings" && (
-        <SettingsModal onCloseModal={closeModal} user={user} />
+        <SettingsModal
+          onCloseModal={closeModal}
+          user={user}
+          resetData={resetData}
+        />
       )}
     </>
   );
