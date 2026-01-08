@@ -1,10 +1,10 @@
 "use client";
 
 import { FiActivity } from "react-icons/fi";
+import { FiSettings } from "react-icons/fi";
 import { useEffect, useState } from "react";
-import { IoClose } from "react-icons/io5";
-import { SIGNALS } from "@/app/constants";
 import { SignalType } from "@/app/types";
+import { LogSignalModal } from "@/app/components/modals/LogSignalModal";
 
 export const DayStateSignal = ({
   logSignalAction,
@@ -43,7 +43,7 @@ export const DayStateSignal = ({
     h-12 w-12 rounded-full
     bg-neutral-800 text-white
     flex items-center justify-center
-    shadow-lg hover:scale-[1.01]
+    shadow-lg hover:scale-[1.02]
     transition-all
     hover:bg-neutral-950
     active:scale-95
@@ -52,44 +52,19 @@ export const DayStateSignal = ({
       >
         <FiActivity size={22} />
       </button>
+      <button
+        className="
+      fixed top-5 left-5 h-10 w-10 rounded-full
+      bg-white text-neutral-600 shadow-sm shadow-neutral-200
+      flex items-center justify-center
+      hover:scale-[1.02] hover:text-neutral-700
+      transition-all active:scale-95
+      "
+      >
+        <FiSettings size={20} />
+      </button>
       {isModalOpen && (
-        <>
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div
-              className="absolute inset-0 bg-black/50"
-              onClick={closeModal}
-            />
-
-            <div className="relative bg-background border border-neutral-200 rounded-lg shadow-lg w-full max-w-md mx-4 overflow-auto max-h-screen">
-              <div className="flex items-center justify-between p-6 border-b border-neutral-200">
-                <h2>Log signal</h2>
-                <button
-                  onClick={closeModal}
-                  className="p-1 hover:bg-muted rounded-md transition-colors"
-                >
-                  <IoClose className="w-5 h-5" />
-                </button>
-              </div>
-
-              <div className="p-6 space-y-4">
-                {SIGNALS.map((signalGroup) => (
-                  <div key={signalGroup.title} className="space-y-2">
-                    <p>{signalGroup.title}</p>
-                    {signalGroup.signals.map((signal) => (
-                      <button
-                        key={signal.value}
-                        onClick={() => logSignal(signal.value)}
-                        className="w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-100 transition-colors"
-                      >
-                        {signal.title}
-                      </button>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </>
+        <LogSignalModal onCloseModal={closeModal} logSignal={logSignal} />
       )}
     </>
   );
