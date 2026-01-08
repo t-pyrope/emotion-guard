@@ -1,9 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FiActivity, FiSun } from "react-icons/fi";
 import { FiSettings } from "react-icons/fi";
-import { useEffect, useState } from "react";
+import { FiClock } from "react-icons/fi";
 import { MorningCheckin, SignalType, User } from "@/app/types";
 import { LogSignalModal } from "@/app/components/modals/LogSignalModal";
 import { SettingsModal } from "@/app/components/modals/SettingsModal";
@@ -20,7 +21,7 @@ export const DayStateModals = ({
   morning: MorningCheckin;
 }) => {
   const [modal, setModal] = useState<
-    null | "log-signal" | "settings" | "morning"
+    null | "log-signal" | "settings" | "morning" | "system-log"
   >(null);
   const isModalOpen = !!modal;
   const router = useRouter();
@@ -84,6 +85,13 @@ export const DayStateModals = ({
           size="md"
           variant="light"
           label="Open Morning Snapshot"
+        />
+        <IconButton
+          onClickAction={() => setModal("system-log")}
+          label="Open System Log / Day Timeline"
+          icon={<FiClock size={20} />}
+          size="md"
+          variant="light"
         />
       </div>
 
