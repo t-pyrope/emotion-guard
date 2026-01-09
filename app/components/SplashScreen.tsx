@@ -24,7 +24,10 @@ export function SplashScreen() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-white overflow-hidden">
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-white overflow-hidden"
+      aria-hidden="true"
+    >
       <div className="flex flex-col items-center gap-0">
         <div className="w-100 h-100 rounded-2xl bg-white flex items-center justify-center">
           <SignalWave />
