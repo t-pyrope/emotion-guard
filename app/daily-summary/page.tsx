@@ -1,8 +1,13 @@
-import { formatMode, mapMorningFromDB, mapSignalFromDB } from "@/app/utils";
+import {
+  formatMode,
+  mapMorningFromDB,
+  mapSignalFromDB,
+  mapUserFromDB,
+} from "@/app/utils";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
-import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
+import { MorningCheckinFromDB, SignalFromDB } from "@/app/types";
 import { computeDayState } from "@/app/day-state/utils";
 import { SIGNALS_DAILY_SUMMARY, SIGNALS_FLAT } from "@/app/constants";
 import { getUser } from "@/app/lib/getUser";
@@ -15,11 +20,13 @@ export default async function Page() {
     redirect("/onboarding");
   }
 
-  const user = await getUser(userId);
+  const userFromDB = await getUser(userId);
 
-  if (!user) {
+  if (!userFromDB) {
     redirect("/onboarding");
   }
+
+  const user = mapUserFromDB(userFromDB);
 
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: user.timezone,
@@ -63,7 +70,7 @@ export default async function Page() {
     .filter((signal) => signal.count !== 0)
     .sort((a, b) => (a.count > b.count ? 1 : -1));
 
-  const dayState = computeDayState(morning, signals, user as UserFromDB);
+  const dayState = computeDayState(morning, signals, user);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
