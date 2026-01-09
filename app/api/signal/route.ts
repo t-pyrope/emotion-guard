@@ -17,8 +17,8 @@ export async function POST(req: Request) {
   const [row] = await sql`
     INSERT INTO signals (user_id, signal_type)
     VALUES (${userId}, ${signal})
-    RETURNING id;
+    RETURNING id, created_at;
   `;
 
-  return NextResponse.json({ id: row.id });
+  return NextResponse.json({ id: row.id, createdAt: row.created_at });
 }

@@ -28,6 +28,7 @@ export const mapSignalFromDB = (signalFromDB: SignalFromDB): Signal => {
   return {
     id: signalFromDB.id,
     signalType: signalFromDB.signal_type,
+    createdAt: signalFromDB.created_at,
   };
 };
 

@@ -38,11 +38,20 @@ export const DayStateBody = ({
 
       const json = await res.json();
 
-      if ("id" in json && json.id && typeof json.id === "string") {
-        const newSignalsLocal = [
-          { id: json.id, signalType: signal },
-          ...signalsLocal,
-        ];
+      if (
+        "id" in json &&
+        json.id &&
+        typeof json.id === "string" &&
+        "createdAt" in json
+      ) {
+        const newSignalsLocal = [...signalsLocal];
+
+        newSignalsLocal.push({
+          id: json.id,
+          signalType: signal,
+          createdAt: json.createdAt,
+        });
+
         const newDayState = computeDayState(morning, newSignalsLocal, user);
 
         setDayState(newDayState);
@@ -75,6 +84,7 @@ export const DayStateBody = ({
         logSignalAction={logSignal}
         user={user}
         morning={morning}
+        signals={signalsLocal}
       />
     </>
   );
