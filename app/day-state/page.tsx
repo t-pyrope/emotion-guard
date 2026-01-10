@@ -1,27 +1,18 @@
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 import { sql } from "@/lib/db";
-import { MorningCheckinFromDB, SignalFromDB } from "@/app/types";
+import { SignalFromDB } from "@/app/types";
 import { mapMorningFromDB, mapSignalFromDB, mapUserFromDB } from "@/app/utils";
-import { getUser } from "@/app/lib/getUser";
 import { Header } from "@/app/components/Header";
 import { DayStateBody } from "@/app/day-state/DayStateBody";
+import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 
 export default async function Page() {
+  const result = await withUserDayGuard(["day-active"]);
+
+  const { user: userFromDB, morning: morningFromDB } = result;
+  const user = mapUserFromDB(userFromDB!);
   const userId = (await cookies()).get("user_id")?.value;
-
-  if (!userId) {
-    redirect("/onboarding");
-  }
-
-  const userFromDB = await getUser(userId);
-
-  if (!userFromDB) {
-    redirect("/onboarding");
-  }
-
-  const user = mapUserFromDB(userFromDB);
 
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: user.timezone,
@@ -30,21 +21,7 @@ export default async function Page() {
     day: "2-digit",
   }).format(new Date());
 
-  const [morningFromDB] = await sql`
-    SELECT *
-    FROM day_sessions
-    WHERE user_id = ${userId}
-      AND day_date = ${today}
-    LIMIT 1
-  `;
-
-  if (!morningFromDB) {
-    redirect("/morning-check-in");
-  } else if (morningFromDB.state === "closed") {
-    redirect("/daily-summary");
-  }
-
-  const morning = mapMorningFromDB(morningFromDB as MorningCheckinFromDB);
+  const morning = mapMorningFromDB(morningFromDB!);
 
   const signalsFromDB = (await sql`
     SELECT *

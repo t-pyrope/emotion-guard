@@ -5,28 +5,21 @@ import {
   mapUserFromDB,
 } from "@/app/utils";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 import { sql } from "@/lib/db";
-import { MorningCheckinFromDB, SignalFromDB } from "@/app/types";
+import { SignalFromDB } from "@/app/types";
 import { computeDayState } from "@/app/day-state/utils";
 import { SIGNALS_DAILY_SUMMARY, SIGNALS_FLAT } from "@/app/constants";
-import { getUser } from "@/app/lib/getUser";
 import { Header } from "@/app/components/Header";
+import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 
 export default async function Page() {
+  const result = await withUserDayGuard(["day-summary"]);
+
+  const { user: userFromDB, morning: morningFromDB } = result;
+  const user = mapUserFromDB(userFromDB!);
+  const morning = mapMorningFromDB(morningFromDB!);
+
   const userId = (await cookies()).get("user_id")?.value;
-
-  if (!userId) {
-    redirect("/onboarding");
-  }
-
-  const userFromDB = await getUser(userId);
-
-  if (!userFromDB) {
-    redirect("/onboarding");
-  }
-
-  const user = mapUserFromDB(userFromDB);
 
   const today = new Intl.DateTimeFormat("en-CA", {
     timeZone: user.timezone,
@@ -34,24 +27,6 @@ export default async function Page() {
     month: "2-digit",
     day: "2-digit",
   }).format(new Date());
-
-  const [daySessionFromDB] = await sql`
-    SELECT *
-    FROM day_sessions
-    WHERE user_id = ${userId}
-      AND day_date = ${today}
-    LIMIT 1
-  `;
-
-  if (!daySessionFromDB) {
-    redirect("/morning-check-in");
-  }
-
-  const morning = mapMorningFromDB(daySessionFromDB as MorningCheckinFromDB);
-
-  if (morning.state === "open") {
-    redirect("/day-state");
-  }
 
   const signalsFromDB = (await sql`
     SELECT *
