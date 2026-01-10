@@ -17,6 +17,7 @@ export interface UserFromDB {
   overload_sources: string[];
   action_on_overload: ActionOnOverload;
   active_hours: ActiveHours;
+  summary_start_hour: number | null;
 }
 
 export interface SignalFromDB {

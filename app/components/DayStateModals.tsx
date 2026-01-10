@@ -104,9 +104,9 @@ export const DayStateModals = ({
 
       {modal === "settings" && (
         <SettingsModal
-          onCloseModal={closeModal}
+          onCloseModalAction={closeModal}
           user={user}
-          resetData={resetData}
+          resetDataAction={resetData}
         />
       )}
 

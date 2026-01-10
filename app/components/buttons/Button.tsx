@@ -4,17 +4,20 @@ export const Button = ({
   onClick,
   variant = "standard",
   size = "medium",
+  type = "button",
 }: {
   isDisabled?: boolean;
   title: string;
   onClick?: () => void;
   variant?: "standard" | "error";
   size?: "medium" | "small";
+  type?: "submit" | "reset" | "button";
 }) => {
   return (
     <button
       disabled={isDisabled}
       onClick={onClick}
+      type={type}
       className={`
       flex text-nowrap items-center
       justify-center gap-2 rounded-full

@@ -43,5 +43,6 @@ export const mapUserFromDB = (userFromDB: UserFromDB): User => {
     timezone: userFromDB.timezone,
     strictnessLevel: userFromDB.strictness_level,
     typicalDailyLoad: userFromDB.typical_daily_load,
+    summaryStartHour: userFromDB.summary_start_hour,
   };
 };
