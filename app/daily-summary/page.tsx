@@ -9,8 +9,8 @@ import { sql } from "@/lib/db";
 import { SignalFromDB } from "@/app/types";
 import { computeDayState } from "@/app/day-state/utils";
 import { SIGNALS_DAILY_SUMMARY, SIGNALS_FLAT } from "@/app/constants";
-import { Header } from "@/app/components/Header";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
+import { PageContainer } from "@/app/components/PageContainer";
 
 export default async function Page() {
   const result = await withUserDayGuard(["day-summary"]);
@@ -48,28 +48,21 @@ export default async function Page() {
   const dayState = computeDayState(morning, signals, user);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
-        <Header title="Daily summary" />
-        <div className="w-full">
-          <div className="flex flex-col gap-2">
-            <div>The system stayed in {formatMode(dayState.mode)} today</div>
-            <div>
-              {signalsWithCount.length > 0 ? (
-                <>
-                  {signalsWithCount.map((signal) => (
-                    <p key={signal.value}>
-                      {SIGNALS_DAILY_SUMMARY[signal.value]}
-                    </p>
-                  ))}
-                </>
-              ) : (
-                <>No signals recorded today</>
-              )}
-            </div>
-          </div>
+    <PageContainer title="Daily summary">
+      <div className="flex flex-col gap-2 w-full">
+        <div>The system stayed in {formatMode(dayState.mode)} today</div>
+        <div>
+          {signalsWithCount.length > 0 ? (
+            <>
+              {signalsWithCount.map((signal) => (
+                <p key={signal.value}>{SIGNALS_DAILY_SUMMARY[signal.value]}</p>
+              ))}
+            </>
+          ) : (
+            <>No signals recorded today</>
+          )}
         </div>
-      </main>
-    </div>
+      </div>
+    </PageContainer>
   );
 }

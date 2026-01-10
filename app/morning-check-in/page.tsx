@@ -1,21 +1,16 @@
 import { MorningCheckInForm } from "@/app/components/MorningCheckInForm";
-import { Header } from "@/app/components/Header";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
+import { PageContainer } from "@/app/components/PageContainer";
 
 export default async function Page() {
   await withUserDayGuard(["no-checkin"]);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
-        <Header
-          title="Morning check-in"
-          subtitle="A quick check-in to adjust today’s suggestions."
-        />
-        <div className="w-full">
-          <MorningCheckInForm />
-        </div>
-      </main>
-    </div>
+    <PageContainer
+      title="Morning check-in"
+      subtitle="A quick check-in to adjust today’s suggestions."
+    >
+      <MorningCheckInForm />
+    </PageContainer>
   );
 }

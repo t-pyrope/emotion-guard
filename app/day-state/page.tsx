@@ -3,9 +3,9 @@ import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
 import { SignalFromDB } from "@/app/types";
 import { mapMorningFromDB, mapSignalFromDB, mapUserFromDB } from "@/app/utils";
-import { Header } from "@/app/components/Header";
 import { DayStateBody } from "@/app/day-state/DayStateBody";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
+import { PageContainer } from "@/app/components/PageContainer";
 
 export default async function Page() {
   const result = await withUserDayGuard(["day-active"]);
@@ -34,12 +34,8 @@ export default async function Page() {
   const signals = signalsFromDB.map((signal) => mapSignalFromDB(signal));
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="min-h-screen w-full max-w-3xl p-16 bg-white dark:bg-black sm:items-start">
-        <Header title="Day state / rules of the day" />
-
-        <DayStateBody signals={signals} morning={morning} user={user} />
-      </main>
-    </div>
+    <PageContainer title="Day state / rules of the day">
+      <DayStateBody signals={signals} morning={morning} user={user} />
+    </PageContainer>
   );
 }
