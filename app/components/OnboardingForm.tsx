@@ -9,6 +9,7 @@ import { FormProgress } from "@/app/components/FormProgress";
 
 import { OnboardingFormValues } from "../types";
 import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
+import { LoadingBar } from "@/app/components/LoadingBar";
 
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -17,7 +18,7 @@ export const OnboardingForm = () => {
     register,
     handleSubmit,
     watch,
-    formState: { isValid },
+    formState: { isValid, isSubmitting },
   } = useForm<OnboardingFormValues>({
     mode: "onChange",
   });
@@ -43,6 +44,7 @@ export const OnboardingForm = () => {
       onSubmit={handleSubmit(send)}
       className="flex flex-col gap-6 lg:gap-10 w-full"
     >
+      {isSubmitting && <LoadingBar />}
       <FormProgress values={values} options={ONBOARDING_QUESTIONS} />
 
       {ONBOARDING_QUESTIONS.map(
