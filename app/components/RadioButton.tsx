@@ -4,11 +4,13 @@ export const RadioButton = ({
   value,
   label,
   isChecked,
+  isMulti = false,
   ...inputProps
 }: {
   value: string | number;
   label: string;
   isChecked: boolean;
+  isMulti?: boolean;
 } & Partial<UseFormRegisterReturn<string>>) => {
   const id = `${inputProps.name}-${value}`;
 
@@ -19,7 +21,7 @@ export const RadioButton = ({
       className={`flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-colors hover:bg-neutral-50/90 ${isChecked ? "border-neutral-300 bg-neutral-50/70" : "border-neutral-200"}`}
     >
       <input
-        type="radio"
+        type={isMulti ? "checkbox" : "radio"}
         id={id}
         value={value}
         className="w-4 h-4 accent-slate-700 peer"

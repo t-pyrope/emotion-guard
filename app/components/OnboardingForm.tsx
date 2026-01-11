@@ -52,6 +52,7 @@ export const OnboardingForm = () => {
             key={question}
             label={`Step ${index + 1} of ${arr.length}. ${question}`}
             options={answers}
+            isMulti={radioGroupName === "overloadSources"}
             hint={<QuestionHint listItems={answers} />}
             {...register(radioGroupName, { required: true })}
           />

@@ -10,11 +10,13 @@ export const RadioGroup = ({
   options,
   label,
   hint,
+  isMulti = false,
   ...rest
 }: {
   options: Answer[];
   label: string;
   hint?: string | ReactNode;
+  isMulti?: boolean;
 } & Partial<UseFormRegisterReturn<string>>) => {
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const inputProps = {
@@ -26,6 +28,7 @@ export const RadioGroup = ({
       setSelectedId(isNumber ? +event.target.value : event.target.value);
     },
   };
+
   return (
     <div className="space-y-2 w-full" role="radiogroup">
       <h4 className="block">
@@ -39,6 +42,7 @@ export const RadioGroup = ({
             value={option.value}
             label={option.label}
             isChecked={selectedId === option.value}
+            isMulti={isMulti}
             {...(inputProps ?? {})}
           />
         ))}

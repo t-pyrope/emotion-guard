@@ -38,7 +38,7 @@ export async function POST(req: Request) {
       ${strictnessLevel},
       ${mainContext},
       ${typicalDailyLoad},
-      ${[overloadSources]},
+      ${overloadSources},
       ${actionOnOverload},
       ${activeHours}
     )

@@ -13,7 +13,7 @@ export interface OnboardingQuestion {
 export interface OnboardingFormValues {
   mainContext: string;
   typicalDailyLoad: string;
-  overloadSources: string;
+  overloadSources: string[];
   actionOnOverload: string;
   strictnessLevel: string;
   activeHours: string;
