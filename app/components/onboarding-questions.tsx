@@ -118,22 +118,22 @@ export const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
       {
         value: "morning",
         label: "Morning",
-        hint: "the app expects morning peaks and protects energy outside them.",
+        hint: "the app expects your focus to peak in the morning and limits intensity later in the day",
       },
       {
         value: "day",
         label: "Day",
-        hint: "the app expects day peaks and protects energy outside them.",
+        hint: "the app assumes a balanced day and adjusts mostly based on signals, not time.",
       },
       {
         value: "evening",
         label: "Evening",
-        hint: "the app expects evening peaks and protects energy outside them.",
+        hint: "the app allows more activity later in the day if signals remain stable.",
       },
       {
         value: "irregular",
         label: "Irregular",
-        hint: "transitions depend more on real-time signals than on the clock.",
+        hint: "the app relies more on real-time signals than on fixed hours and warns earlier.",
       },
     ],
   },
