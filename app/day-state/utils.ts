@@ -87,6 +87,24 @@ const OVERLOAD_SOURCE_MODIFIERS = {
   },
 } as const;
 
+const ACTION_ON_OVERLOAD_MODIFIERS = {
+  push_through: {
+    earlyWarnings: true,
+    softenDayEarly: false,
+    restrictDeepWorkEarly: false,
+  },
+  shut_down: {
+    earlyWarnings: false,
+    softenDayEarly: true,
+    restrictDeepWorkEarly: false,
+  },
+  lose_focus: {
+    earlyWarnings: false,
+    softenDayEarly: false,
+    restrictDeepWorkEarly: true,
+  },
+} as const;
+
 export const computeDayState = (
   morning: MorningCheckin,
   signals: Signal[],
@@ -117,6 +135,8 @@ export const computeDayState = (
 
   const dailyLoad = DAILY_LOAD_MODIFIERS[user.typicalDailyLoad];
 
+  const actionMod = ACTION_ON_OVERLOAD_MODIFIERS[user.actionOnOverload];
+
   let mode: DayState["mode"] = "normal";
 
   const baseThresholds = THRESHOLDS[user.strictnessLevel];
@@ -124,8 +144,16 @@ export const computeDayState = (
   const protectedThreshold =
     baseThresholds.protected - dailyLoad.thresholdShift;
 
-  if (loadScore >= limitedThreshold) mode = "limited";
-  if (loadScore >= protectedThreshold) mode = "protected";
+  let adjustedLimitedThreshold = limitedThreshold;
+  let adjustedProtectedThreshold = protectedThreshold;
+
+  if (actionMod.softenDayEarly) {
+    adjustedLimitedThreshold -= 1;
+    adjustedProtectedThreshold -= 1;
+  }
+
+  if (loadScore >= adjustedLimitedThreshold) mode = "limited";
+  if (loadScore >= adjustedProtectedThreshold) mode = "protected";
 
   const overloadFlags = {
     restrictSocialEarly: false,
@@ -154,18 +182,21 @@ export const computeDayState = (
         mode === "normal" &&
         !(
           (context.restrictSocialEarly || overloadFlags.restrictSocialEarly) &&
-          loadScore >= limitedThreshold
+          loadScore >= adjustedLimitedThreshold
         ),
 
       allowDeepWork:
         mode === "normal" &&
-        !(overloadFlags.restrictDeepWorkEarly && loadScore >= limitedThreshold),
+        !(
+          overloadFlags.restrictDeepWorkEarly || actionMod.restrictDeepWorkEarly
+        ),
 
       showWarnings:
         mode !== "normal" ||
         context.earlyWarnings ||
         dailyLoad.earlyWarnings ||
-        overloadFlags.earlyWarnings,
+        overloadFlags.earlyWarnings ||
+        actionMod.earlyWarnings,
     },
   };
 };
