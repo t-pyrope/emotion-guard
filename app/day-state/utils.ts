@@ -128,24 +128,45 @@ const ACTIVE_HOURS_MODIFIERS = {
   },
 } as const;
 
+// влияет на базовую доступную энергию
+const BODY_STATE_IMPACT = {
+  1: 2,
+  2: 1,
+  3: 0,
+} as const;
+
+// влияет на устойчивость фокуса и ранние ограничения
+const MENTAL_STATE_IMPACT = {
+  1: { load: 2, restrictDeepWorkEarly: true },
+  2: { load: 1, restrictDeepWorkEarly: false },
+  3: { load: 0, restrictDeepWorkEarly: false },
+} as const;
+
+// влияет на социальную и когнитивную нагрузку
+const CONTACTS_IMPACT = {
+  1: { load: 2, socialCost: true },
+  2: { load: 1, socialCost: false },
+  3: { load: 0, socialCost: false },
+} as const;
+
 export const computeDayState = (
   morning: MorningCheckin,
   signals: Signal[],
   user: User,
+  userHour: number,
 ): DayState => {
-  // TODO: Morning - body, mental, contacts expected
   let loadScore = 0;
 
   loadScore += 3 - morning.sleepLevel;
   loadScore += 3 - morning.resourceLevel;
 
-  const userHour = Number(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: user.timezone,
-      hour: "2-digit",
-      hour12: false,
-    }).format(new Date()),
-  );
+  loadScore += Math.max(0, BODY_STATE_IMPACT[morning.bodyState] - 1);
+
+  const mentalImpact = MENTAL_STATE_IMPACT[morning.mentalState];
+  loadScore += Math.max(0, mentalImpact.load - 1);
+
+  const contactsImpact = CONTACTS_IMPACT[morning.contactsExpected];
+  loadScore += Math.max(0, contactsImpact.load - 1);
 
   const activeHours = ACTIVE_HOURS_MODIFIERS[user.activeHours];
   const isLate = userHour >= 18;
@@ -177,8 +198,8 @@ export const computeDayState = (
   const protectedThreshold =
     baseThresholds.protected - dailyLoad.thresholdShift;
 
-  let adjustedLimitedThreshold = limitedThreshold;
-  let adjustedProtectedThreshold = protectedThreshold;
+  let adjustedLimitedThreshold = Math.max(limitedThreshold, 1);
+  let adjustedProtectedThreshold = Math.max(protectedThreshold, 1);
 
   if (actionMod.softenDayEarly) {
     adjustedLimitedThreshold -= 1;
@@ -203,6 +224,14 @@ export const computeDayState = (
     if (mod.restrictNewTasksEarly) overloadFlags.restrictNewTasksEarly = true;
     if (mod.restrictDeepWorkEarly) overloadFlags.restrictDeepWorkEarly = true;
     if (mod.earlyWarnings) overloadFlags.earlyWarnings = true;
+  }
+
+  if (mentalImpact.restrictDeepWorkEarly) {
+    overloadFlags.restrictDeepWorkEarly = true;
+  }
+
+  if (contactsImpact.socialCost) {
+    overloadFlags.restrictSocialEarly = true;
   }
 
   return {

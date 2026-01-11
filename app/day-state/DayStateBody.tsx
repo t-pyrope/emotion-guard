@@ -19,7 +19,15 @@ export const DayStateBody = ({
   user: User;
 }) => {
   const [dayState, setDayState] = useState(() => {
-    return computeDayState(morning, signals, user);
+    const userHour = Number(
+      new Intl.DateTimeFormat("en-US", {
+        timeZone: user.timezone,
+        hour: "2-digit",
+        hour12: false,
+      }).format(new Date()),
+    );
+
+    return computeDayState(morning, signals, user, userHour);
   });
   const [signalsLocal, setSignalsLocal] = useState<Signal[]>(signals);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +60,20 @@ export const DayStateBody = ({
           createdAt: json.createdAt,
         });
 
-        const newDayState = computeDayState(morning, newSignalsLocal, user);
+        const userHour = Number(
+          new Intl.DateTimeFormat("en-US", {
+            timeZone: user.timezone,
+            hour: "2-digit",
+            hour12: false,
+          }).format(new Date()),
+        );
+
+        const newDayState = computeDayState(
+          morning,
+          newSignalsLocal,
+          user,
+          userHour,
+        );
 
         setDayState(newDayState);
         setSignalsLocal(newSignalsLocal);

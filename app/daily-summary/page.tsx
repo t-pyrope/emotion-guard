@@ -45,7 +45,15 @@ export default async function Page() {
     .filter((signal) => signal.count !== 0)
     .sort((a, b) => (a.count > b.count ? 1 : -1));
 
-  const dayState = computeDayState(morning, signals, user);
+  const userHour = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: user.timezone,
+      hour: "2-digit",
+      hour12: false,
+    }).format(new Date()),
+  );
+
+  const dayState = computeDayState(morning, signals, user, userHour);
 
   return (
     <PageContainer title="Daily summary">
