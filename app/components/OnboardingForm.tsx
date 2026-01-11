@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import { RadioGroup } from "@/app/components/RadioGroup";
 import { Button } from "@/app/components/buttons/Button";
 import { FormProgress } from "@/app/components/FormProgress";
-import { QuestionHint } from "@/app/components/QuestionHint";
 
 import { OnboardingFormValues } from "../types";
 import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
@@ -53,7 +52,7 @@ export const OnboardingForm = () => {
             label={`Step ${index + 1} of ${arr.length}. ${question}`}
             options={answers}
             isMulti={radioGroupName === "overloadSources"}
-            hint={<QuestionHint listItems={answers} />}
+            hasHint={true}
             {...register(radioGroupName, { required: true })}
           />
         ),

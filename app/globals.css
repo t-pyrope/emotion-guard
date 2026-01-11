@@ -81,3 +81,10 @@ select {
   stroke-dashoffset: 200;
   animation: draw 1.2s ease-out forwards;
 }
+
+.tooltip-adaptive {
+  max-width: min(90vw, 200px);
+  width: max-content;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

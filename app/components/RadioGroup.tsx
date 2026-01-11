@@ -1,24 +1,26 @@
 "use client";
 import { UseFormRegisterReturn } from "react-hook-form";
+import { Tooltip } from "react-tooltip";
+import { useId, useState } from "react";
 
-import { ReactNode, useState } from "react";
-import { Answer } from "@/app/types";
 import { RadioButton } from "@/app/components/RadioButton";
-import { LabelTooltip } from "@/app/components/LabelTooltip";
+import { QuestionHint } from "@/app/components/QuestionHint";
+import { Answer } from "@/app/types";
 
 export const RadioGroup = ({
   options,
   label,
-  hint,
+  hasHint = false,
   isMulti = false,
   ...rest
 }: {
   options: Answer[];
   label: string;
-  hint?: string | ReactNode;
+  hasHint?: boolean;
   isMulti?: boolean;
 } & Partial<UseFormRegisterReturn<string>>) => {
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const id = useId();
   const inputProps = {
     ...(rest ?? {}),
     onChange: async (event: { target: HTMLInputElement }) => {
@@ -33,7 +35,28 @@ export const RadioGroup = ({
     <div className="space-y-2 w-full" role="radiogroup">
       <h4 className="block">
         {label}
-        {hint && <LabelTooltip text={hint} />}
+        {hasHint && (
+          <>
+            <button
+              type="button"
+              id={id}
+              className="
+                transition-all inline-flex items-center justify-center
+                w-5 h-5 rounded-full border border-gray-300 text-gray-500
+                ml-1 hover:bg-gray-100 max-w-5"
+              aria-label="hint"
+            >
+              ?
+            </button>
+            <Tooltip
+              anchorSelect={`#${id}`}
+              variant="light"
+              className="tooltip-adaptive border-slate-200 shadow-lg z-2"
+            >
+              <QuestionHint listItems={options} />
+            </Tooltip>
+          </>
+        )}
       </h4>
       <div className="space-y-2">
         {options.map((option) => (

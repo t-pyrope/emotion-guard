@@ -7,7 +7,6 @@ import { MORNING_CHECK_IN_QUESTIONS } from "@/app/components/morning-check-in-qu
 import { RadioGroup } from "@/app/components/RadioGroup";
 import { Button } from "@/app/components/buttons/Button";
 import { FormProgress } from "@/app/components/FormProgress";
-import { QuestionHint } from "@/app/components/QuestionHint";
 
 export const MorningCheckInForm = () => {
   const {
@@ -43,7 +42,7 @@ export const MorningCheckInForm = () => {
         ({ question, answers, radioGroupName }, index, arr) => (
           <RadioGroup
             options={answers}
-            hint={<QuestionHint listItems={answers} />}
+            hasHint={true}
             label={`Step ${index + 1} of ${arr.length}. ${question}`}
             key={question}
             {...register(radioGroupName, {
