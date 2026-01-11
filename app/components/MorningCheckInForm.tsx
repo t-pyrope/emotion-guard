@@ -33,7 +33,10 @@ export const MorningCheckInForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit(send)} className="flex flex-col gap-10 w-full">
+    <form
+      onSubmit={handleSubmit(send)}
+      className="flex flex-col gap-6 w-full lg:gap-10"
+    >
       <FormProgress options={MORNING_CHECK_IN_QUESTIONS} values={values} />
 
       {MORNING_CHECK_IN_QUESTIONS.map(
@@ -50,7 +53,7 @@ export const MorningCheckInForm = () => {
         ),
       )}
 
-      <div className="text-base mt-4 flex gap-3 w-full items-center">
+      <div className="text-base mt-4 flex gap-3 w-full items-center flex-col lg:flex-row">
         <Button isDisabled={!isValid} title="Start the day" type="submit" />
         <p
           className={`text-muted-foreground transition-opacity duration-250 ${isValid ? "opacity-0" : "opacity-100"}`}

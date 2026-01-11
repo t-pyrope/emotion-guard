@@ -21,7 +21,7 @@ export const IconButton = ({
     rounded-full flex items-center justify-center transition-all
     ${size === "lg" && "h-12 w-12 shadow-lg"}
     ${size === "md" && "h-10 w-10 shadow-sm"}
-    ${variant === "dark" && "bg-neutral-800 text-white hover:bg-neutral-950"}
+    ${variant === "dark" && "bg-slate-800 text-white hover:bg-neutral-950"}
     ${variant === "light" && "bg-white text-neutral-600 shadow-neutral-200 hover:text-neutral-700"}
     hover:scale-[1.02] active:scale-95
   `}

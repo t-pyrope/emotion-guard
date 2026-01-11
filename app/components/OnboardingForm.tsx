@@ -42,7 +42,7 @@ export const OnboardingForm = () => {
   return (
     <form
       onSubmit={handleSubmit(send)}
-      className="flex flex-col gap-3 lg:gap-10 w-full"
+      className="flex flex-col gap-6 lg:gap-10 w-full"
     >
       <FormProgress values={values} options={ONBOARDING_QUESTIONS} />
 
@@ -58,7 +58,7 @@ export const OnboardingForm = () => {
         ),
       )}
 
-      <div className="text-base mt-4 flex gap-3 w-full items-center">
+      <div className="text-base mt-4 flex gap-3 w-full items-center flex-col lg:flex-row">
         <Button
           isDisabled={!isValid}
           title="Start using Daily Signal"

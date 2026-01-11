@@ -67,14 +67,14 @@ export const DayStateModals = ({
 
   return (
     <>
-      <div className="fixed bottom-15 right-15">
+      <div className="fixed lg:bottom-15 lg:right-15 bottom-5 right-5">
         <IconButton
           onClickAction={() => setModal("log-signal")}
           label="Log signal"
           icon={<FiActivity size={22} />}
         />
       </div>
-      <div className="fixed top-5 left-5 flex flex-col gap-2">
+      <div className="fixed lg:top-5 lg:left-5 flex lg:flex-col gap-2 bottom-5 left-5">
         <IconButton
           onClickAction={() => setModal("settings")}
           label="Open Settings"
