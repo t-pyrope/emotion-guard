@@ -13,7 +13,7 @@ export const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
       {
         value: "work",
         label: "Work",
-        hint: "the app will lean toward protecting focus and mental energy during learning days.",
+        hint: "rules will prioritize sustainable performance around deadlines and responsibilities.",
       },
       {
         value: "both",

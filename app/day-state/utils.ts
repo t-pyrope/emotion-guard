@@ -14,12 +14,30 @@ const SIGNAL_WEIGHTS: Record<SignalType, number> = {
   all_good: -1,
 };
 
+const CONTEXT_MODIFIERS = {
+  study: {
+    loadBias: 1,
+    earlyWarnings: false,
+    restrictSocialEarly: true,
+  },
+  work: {
+    loadBias: 0,
+    earlyWarnings: false,
+    restrictSocialEarly: false,
+  },
+  both: {
+    loadBias: 1,
+    earlyWarnings: true,
+    restrictSocialEarly: false,
+  },
+} as const;
+
 export const computeDayState = (
   morning: MorningCheckin,
   signals: Signal[],
   user: User,
 ): DayState => {
-  // TODO: добавить учет Onboarding - main content, overload sources, action on overload, active hours
+  // TODO: добавить учет Onboarding - overload sources, action on overload, active hours
   // TODO: Morning - body, mental, contacts expected
   let loadScore = 0;
 
@@ -29,6 +47,9 @@ export const computeDayState = (
   for (const signal of signals) {
     loadScore += SIGNAL_WEIGHTS[signal.signalType] ?? 0;
   }
+
+  const context = CONTEXT_MODIFIERS[user.mainContext];
+  loadScore += context.loadBias;
 
   let mode: DayState["mode"] = "normal";
 
@@ -51,9 +72,10 @@ export const computeDayState = (
     mode,
     rules: {
       allowNewTasks: mode !== "protected",
-      allowSocial: mode === "normal",
+      allowSocial:
+        mode === "normal" && !(context.restrictSocialEarly && loadScore >= 3),
       allowDeepWork: mode === "normal",
-      showWarnings: mode !== "normal",
+      showWarnings: mode !== "normal" || context.earlyWarnings,
     },
   };
 };
