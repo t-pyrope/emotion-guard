@@ -14,6 +14,30 @@ const SIGNAL_WEIGHTS: Record<SignalType, number> = {
   all_good: -1,
 };
 
+const DAILY_LOAD_MODIFIERS = {
+  light: {
+    thresholdShift: +1,
+    earlyWarnings: false,
+    socialTolerance: true,
+  },
+  moderate: {
+    thresholdShift: 0,
+    earlyWarnings: false,
+    socialTolerance: false,
+  },
+  heavy: {
+    thresholdShift: -1,
+    earlyWarnings: true,
+    socialTolerance: false,
+  },
+} as const;
+
+const THRESHOLDS = {
+  gentle: { limited: 4, protected: 6 },
+  standard: { limited: 3, protected: 5 },
+  strict: { limited: 2, protected: 4 },
+} as const;
+
 const CONTEXT_MODIFIERS = {
   study: {
     loadBias: 1,
@@ -51,31 +75,29 @@ export const computeDayState = (
   const context = CONTEXT_MODIFIERS[user.mainContext];
   loadScore += context.loadBias;
 
+  const dailyLoad = DAILY_LOAD_MODIFIERS[user.typicalDailyLoad];
+
   let mode: DayState["mode"] = "normal";
 
-  if (user.strictnessLevel === "gentle") {
-    if (loadScore >= 4) mode = "limited";
-    if (loadScore >= 6) mode = "protected";
-  }
+  const baseThresholds = THRESHOLDS[user.strictnessLevel];
+  const limitedThreshold = baseThresholds.limited - dailyLoad.thresholdShift;
+  const protectedThreshold =
+    baseThresholds.protected - dailyLoad.thresholdShift;
 
-  if (user.strictnessLevel === "standard") {
-    if (loadScore >= 3) mode = "limited";
-    if (loadScore >= 5) mode = "protected";
-  }
-
-  if (user.strictnessLevel === "strict") {
-    if (loadScore >= 2) mode = "limited";
-    if (loadScore >= 4) mode = "protected";
-  }
+  if (loadScore >= limitedThreshold) mode = "limited";
+  if (loadScore >= protectedThreshold) mode = "protected";
 
   return {
     mode,
     rules: {
       allowNewTasks: mode !== "protected",
       allowSocial:
-        mode === "normal" && !(context.restrictSocialEarly && loadScore >= 3),
+        mode === "normal" &&
+        (dailyLoad.socialTolerance ||
+          !(context.restrictSocialEarly && loadScore >= 3)),
       allowDeepWork: mode === "normal",
-      showWarnings: mode !== "normal" || context.earlyWarnings,
+      showWarnings:
+        mode !== "normal" || context.earlyWarnings || dailyLoad.earlyWarnings,
     },
   };
 };
