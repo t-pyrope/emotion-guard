@@ -56,6 +56,37 @@ const CONTEXT_MODIFIERS = {
   },
 } as const;
 
+const OVERLOAD_SOURCE_MODIFIERS = {
+  too_many_people: {
+    interactionMultiplier: 1.5,
+    restrictSocialEarly: true,
+    restrictNewTasksEarly: false,
+    restrictDeepWorkEarly: false,
+    earlyWarnings: false,
+  },
+  deadlines: {
+    interactionMultiplier: 1,
+    restrictNewTasksEarly: true,
+    restrictSocialEarly: false,
+    restrictDeepWorkEarly: false,
+    earlyWarnings: false,
+  },
+  unclear_expectations: {
+    interactionMultiplier: 1,
+    earlyWarnings: true,
+    restrictSocialEarly: false,
+    restrictNewTasksEarly: false,
+    restrictDeepWorkEarly: false,
+  },
+  context_switching: {
+    interactionMultiplier: 1,
+    restrictDeepWorkEarly: true,
+    restrictSocialEarly: false,
+    restrictNewTasksEarly: false,
+    earlyWarnings: false,
+  },
+} as const;
+
 export const computeDayState = (
   morning: MorningCheckin,
   signals: Signal[],
@@ -69,7 +100,16 @@ export const computeDayState = (
   loadScore += 3 - morning.resourceLevel;
 
   for (const signal of signals) {
-    loadScore += SIGNAL_WEIGHTS[signal.signalType] ?? 0;
+    let weight = SIGNAL_WEIGHTS[signal.signalType] ?? 0;
+
+    if (
+      signal.signalType === "interaction_load" &&
+      user.overloadSources.includes("too_many_people")
+    ) {
+      weight *= OVERLOAD_SOURCE_MODIFIERS.too_many_people.interactionMultiplier;
+    }
+
+    loadScore += weight;
   }
 
   const context = CONTEXT_MODIFIERS[user.mainContext];
@@ -87,17 +127,45 @@ export const computeDayState = (
   if (loadScore >= limitedThreshold) mode = "limited";
   if (loadScore >= protectedThreshold) mode = "protected";
 
+  const overloadFlags = {
+    restrictSocialEarly: false,
+    restrictNewTasksEarly: false,
+    restrictDeepWorkEarly: false,
+    earlyWarnings: false,
+  };
+
+  for (const source of user.overloadSources) {
+    const mod = OVERLOAD_SOURCE_MODIFIERS[source];
+    if (!mod) continue;
+
+    if (mod.restrictSocialEarly) overloadFlags.restrictSocialEarly = true;
+    if (mod.restrictNewTasksEarly) overloadFlags.restrictNewTasksEarly = true;
+    if (mod.restrictDeepWorkEarly) overloadFlags.restrictDeepWorkEarly = true;
+    if (mod.earlyWarnings) overloadFlags.earlyWarnings = true;
+  }
+
   return {
     mode,
     rules: {
-      allowNewTasks: mode !== "protected",
+      allowNewTasks:
+        mode !== "protected" &&
+        !(overloadFlags.restrictNewTasksEarly && mode === "limited"),
       allowSocial:
         mode === "normal" &&
-        (dailyLoad.socialTolerance ||
-          !(context.restrictSocialEarly && loadScore >= 3)),
-      allowDeepWork: mode === "normal",
+        !(
+          (context.restrictSocialEarly || overloadFlags.restrictSocialEarly) &&
+          loadScore >= limitedThreshold
+        ),
+
+      allowDeepWork:
+        mode === "normal" &&
+        !(overloadFlags.restrictDeepWorkEarly && loadScore >= limitedThreshold),
+
       showWarnings:
-        mode !== "normal" || context.earlyWarnings || dailyLoad.earlyWarnings,
+        mode !== "normal" ||
+        context.earlyWarnings ||
+        dailyLoad.earlyWarnings ||
+        overloadFlags.earlyWarnings,
     },
   };
 };

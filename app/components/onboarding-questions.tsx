@@ -48,7 +48,7 @@ export const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
     radioGroupName: "overloadSources",
     answers: [
       {
-        value: "people",
+        value: "too_many_people",
         label: "Too many people",
         hint: "meetings and chats count as higher cost.",
       },
@@ -58,12 +58,12 @@ export const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
         hint: "the app may restrict new commitments near due dates.",
       },
       {
-        value: "unclear-exp",
+        value: "unclear_expectations",
         label: "Unclear expectations",
         hint: "warnings appear when plans are vague.",
       },
       {
-        value: "context-switch",
+        value: "context_switching",
         label: "Context switching",
         hint: "frequent changes reduce deep-work allowance.",
       },

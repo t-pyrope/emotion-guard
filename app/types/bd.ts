@@ -14,7 +14,12 @@ export interface UserFromDB {
   strictness_level: StrictnessLevel;
   main_context: MainContext;
   typical_daily_load: TypicalDailyLoad;
-  overload_sources: string[];
+  overload_sources: Array<
+    | "too_many_people"
+    | "deadlines"
+    | "unclear_expectations"
+    | "context_switching"
+  >;
   action_on_overload: ActionOnOverload;
   active_hours: ActiveHours;
   summary_start_hour: number | null;
