@@ -11,6 +11,7 @@ export const DayTimelineModal = ({
 }) => {
   return (
     <Modal onCloseModalAction={onCloseModal} title="System Log / Day Timeline">
+      {signals.length === 0 && <p>No signals yet today</p>}
       {signals.map((signal) => (
         <div key={signal.id}>
           {new Intl.DateTimeFormat("cs-CZ", {
