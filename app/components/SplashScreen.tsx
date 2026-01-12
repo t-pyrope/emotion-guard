@@ -1,9 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 export function SplashScreen() {
   const [visible, setVisible] = useState(true);
+  const pathname = usePathname();
 
   useEffect(() => {
     let t: NodeJS.Timeout;
@@ -21,7 +23,7 @@ export function SplashScreen() {
     };
   }, [visible]);
 
-  if (!visible) return null;
+  if (!visible || pathname === "/") return null;
 
   return (
     <div

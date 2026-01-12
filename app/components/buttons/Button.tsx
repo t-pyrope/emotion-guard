@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const Button = ({
   isDisabled = false,
   title,
@@ -5,6 +7,7 @@ export const Button = ({
   variant = "standard",
   size = "medium",
   type = "button",
+  href,
 }: {
   isDisabled?: boolean;
   title: string;
@@ -12,14 +15,10 @@ export const Button = ({
   variant?: "standard" | "error";
   size?: "medium" | "small";
   type?: "submit" | "reset" | "button";
+  href?: string;
 }) => {
-  return (
-    <button
-      disabled={isDisabled}
-      onClick={onClick}
-      type={type}
-      className={`
-      flex text-nowrap items-center
+  const className = `
+      flex text-nowrap items-center w-fit
       justify-center gap-2 rounded-full
       ${variant === "standard" && "bg-slate-800 hover:bg-slate-950 dark:hover:bg-[#ccc]"}
       ${variant === "error" && "bg-rose-800/85 hover:bg-rose-900/90"}
@@ -27,7 +26,17 @@ export const Button = ({
       ${size === "small" && "font-small h-10"}
       px-6 text-background hover:scale-[1.01]
       disabled:opacity-75 transition-all
-`}
+`;
+  return href ? (
+    <Link href={href} className={className}>
+      {title}
+    </Link>
+  ) : (
+    <button
+      disabled={isDisabled}
+      onClick={onClick}
+      type={type}
+      className={className}
     >
       {title}
     </button>
