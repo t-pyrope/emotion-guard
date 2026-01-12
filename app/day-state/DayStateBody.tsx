@@ -5,9 +5,9 @@ import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
 import { DayStateModals } from "@/app/components/DayStateModals";
 import { MorningCheckin, Signal, SignalType, User } from "@/app/types";
 import { useState } from "react";
-import { computeDayState } from "@/app/day-state/utils";
 import { formatModeWithSubtitle } from "@/app/utils/formatModeWithSubtitle";
 import { LoadingBar } from "@/app/components/LoadingBar";
+import { computeDayState } from "@/app/utils/computeDayState";
 
 export const DayStateBody = ({
   signals,

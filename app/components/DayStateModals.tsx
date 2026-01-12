@@ -115,7 +115,12 @@ export const DayStateModals = ({
       )}
 
       {modal === "system-log" && (
-        <DayTimelineModal onCloseModal={closeModal} signals={signals} />
+        <DayTimelineModal
+          onCloseModal={closeModal}
+          signals={signals}
+          morning={morning}
+          user={user}
+        />
       )}
     </>
   );

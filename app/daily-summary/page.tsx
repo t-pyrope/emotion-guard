@@ -7,10 +7,10 @@ import {
 import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
 import { SignalFromDB } from "@/app/types";
-import { computeDayState } from "@/app/day-state/utils";
 import { SIGNALS_DAILY_SUMMARY, SIGNALS_FLAT } from "@/app/constants";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 import { PageContainer } from "@/app/components/PageContainer";
+import { computeDayState } from "@/app/utils/computeDayState";
 
 export default async function Page() {
   const result = await withUserDayGuard(["day-summary"]);
