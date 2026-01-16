@@ -8,15 +8,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { signal } = await req.json();
+  const { signal, daySessionId } = await req.json();
 
   if (!signal) {
     return NextResponse.json({ error: "No signal" }, { status: 400 });
   }
 
   const [row] = await sql`
-    INSERT INTO signals (user_id, signal_type)
-    VALUES (${userId}, ${signal})
+    INSERT INTO signals (user_id, signal_type, day_session_id)
+    VALUES (${userId}, ${signal}, ${daySessionId})
     RETURNING id, created_at;
   `;
 

@@ -28,12 +28,12 @@ export const DayStateBody = ({
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/signal", {
+      const res = await fetch("/api/signals", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ signal }),
+        body: JSON.stringify({ signal, daySessionId: morning.id }),
       });
 
       const json = await res.json();
