@@ -1,4 +1,5 @@
 import {
+  formatDate,
   formatMode,
   mapMorningFromDB,
   mapSignalFromDB,
@@ -10,7 +11,7 @@ import { SignalFromDB } from "@/app/types";
 import { SIGNALS_DAILY_SUMMARY, SIGNALS_FLAT } from "@/app/constants";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 import { PageContainer } from "@/app/components/PageContainer";
-import { computeDayState } from "@/app/utils/computeDayState";
+import { computeDayState } from "@/app/utils";
 
 export default async function Page() {
   const result = await withUserDayGuard(["day-summary"]);
@@ -21,12 +22,7 @@ export default async function Page() {
 
   const userId = (await cookies()).get("user_id")?.value;
 
-  const today = new Intl.DateTimeFormat("en-CA", {
-    timeZone: user.timezone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+  const today = formatDate(user.timezone);
 
   const signalsFromDB = (await sql`
     SELECT *

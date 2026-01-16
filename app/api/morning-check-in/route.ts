@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
 import { getUser } from "@/app/lib/getUser";
+import { formatDate } from "@/app/utils";
 
 export async function POST(req: Request) {
   const userId = (await cookies()).get("user_id")?.value;
@@ -26,12 +27,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "User not found" }, { status: 404 });
   }
 
-  const checkinDate = new Intl.DateTimeFormat("en-CA", {
-    timeZone: user.timezone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(new Date());
+  const checkinDate = formatDate(user.timezone);
 
   await sql`
         INSERT INTO day_sessions (

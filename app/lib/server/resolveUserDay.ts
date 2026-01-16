@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
 import { MorningCheckinFromDB, UserFromDB } from "@/app/types";
+import { formatDate, getHourAsNumber } from "@/app/utils";
 
 export type UserDayStatus =
   | "no-user"
@@ -31,14 +32,7 @@ export async function resolveUserDay(): Promise<UserDayResolution> {
     return { status: "needs-onboarding", user: null, morning: null };
   }
 
-  const now = new Date();
-
-  const today = new Intl.DateTimeFormat("en-CA", {
-    timeZone: user.timezone,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
+  const today = formatDate(user.timezone);
 
   const mornings = await sql`
     SELECT *
@@ -53,13 +47,7 @@ export async function resolveUserDay(): Promise<UserDayResolution> {
     return { status: "no-checkin", user, morning: null };
   }
 
-  const hour = Number(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: user.timezone,
-      hour: "2-digit",
-      hour12: false,
-    }).format(now),
-  );
+  const hour = getHourAsNumber(user.timezone);
 
   if (
     morning.state === "closed" ||

@@ -1,7 +1,7 @@
 import { Modal } from "@/app/components/modals/Modal";
 import { DayState, MorningCheckin, Signal, User } from "@/app/types";
 import { SIGNALS_DAILY_SUMMARY } from "@/app/constants";
-import { computeDayState } from "@/app/utils/computeDayState";
+import { computeDayState, getHourAsNumber } from "@/app/utils";
 
 interface TimelineEvent {
   createdAt: string;
@@ -24,13 +24,7 @@ export const DayTimelineModal = ({
     morning,
     [],
     user,
-    Number(
-      new Intl.DateTimeFormat("en-US", {
-        timeZone: user.timezone,
-        hour: "2-digit",
-        hour12: false,
-      }).format(new Date(morning.createdAt)),
-    ),
+    getHourAsNumber(user.timezone, morning.createdAt),
   );
 
   const timeline: TimelineEvent[] = [
@@ -47,14 +41,7 @@ export const DayTimelineModal = ({
     for (let i = 0; i < signals.length; i++) {
       const slice = signals.slice(0, i + 1);
       const lastSignal = slice.at(-1)!;
-
-      const userHour = Number(
-        new Intl.DateTimeFormat("en-US", {
-          timeZone: user.timezone,
-          hour: "2-digit",
-          hour12: false,
-        }).format(new Date(lastSignal.createdAt)),
-      );
+      const userHour = getHourAsNumber(user.timezone, lastSignal.createdAt);
 
       const state = computeDayState(morning, slice, user, userHour);
 
