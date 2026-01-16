@@ -18,7 +18,12 @@ export const Modal = ({
         onClick={onCloseModalAction}
       />
 
-      <div className="relative bg-background border border-neutral-200 rounded-lg shadow-lg w-full max-w-md mx-4 overflow-auto max-h-(--98vh)">
+      <div
+        className="
+      relative overflow-hidden flex flex-col
+      bg-background border border-neutral-200 rounded-lg shadow-lg
+      w-full max-w-md mx-4 max-h-(--90vh)"
+      >
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
           <h2>{title}</h2>
           <button
@@ -28,7 +33,7 @@ export const Modal = ({
             <IoClose className="w-5 h-5" />
           </button>
         </div>
-        <div className="p-6">{children}</div>
+        <div className="p-6 overflow-auto h-full">{children}</div>
       </div>
     </div>
   );
