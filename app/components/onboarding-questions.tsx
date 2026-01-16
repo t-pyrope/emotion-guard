@@ -111,30 +111,4 @@ export const ONBOARDING_QUESTIONS: OnboardingQuestion[] = [
       },
     ],
   },
-  {
-    question: "Your typical active hours",
-    radioGroupName: "activeHours",
-    answers: [
-      {
-        value: "morning",
-        label: "Morning",
-        hint: "the app expects your focus to peak in the morning and limits intensity later in the day",
-      },
-      {
-        value: "day",
-        label: "Day",
-        hint: "the app assumes a balanced day and adjusts mostly based on signals, not time.",
-      },
-      {
-        value: "evening",
-        label: "Evening",
-        hint: "the app allows more activity later in the day if signals remain stable.",
-      },
-      {
-        value: "irregular",
-        label: "Irregular",
-        hint: "the app relies more on real-time signals than on fixed hours and warns earlier.",
-      },
-    ],
-  },
 ];

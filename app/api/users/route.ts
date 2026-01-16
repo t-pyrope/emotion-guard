@@ -19,7 +19,6 @@ export async function POST(req: Request) {
     typicalDailyLoad,
     overloadSources,
     actionOnOverload,
-    activeHours,
   } = body;
 
   await sql`
@@ -30,8 +29,7 @@ export async function POST(req: Request) {
       main_context,
       typical_daily_load,
       overload_sources,
-      action_on_overload,
-      active_hours
+      action_on_overload
     ) VALUES (
       ${userId},
       ${timezone},
@@ -39,8 +37,7 @@ export async function POST(req: Request) {
       ${mainContext},
       ${typicalDailyLoad},
       ${overloadSources},
-      ${actionOnOverload},
-      ${activeHours}
+      ${actionOnOverload}
     )
     ON CONFLICT (user_id)
     DO UPDATE SET
@@ -49,8 +46,7 @@ export async function POST(req: Request) {
       main_context = EXCLUDED.main_context,
       typical_daily_load = EXCLUDED.typical_daily_load,
       overload_sources = EXCLUDED.overload_sources,
-      action_on_overload = EXCLUDED.action_on_overload,
-      active_hours = EXCLUDED.active_hours
+      action_on_overload = EXCLUDED.action_on_overload
   `;
 
   cookieStore.set("user_id", userId, {

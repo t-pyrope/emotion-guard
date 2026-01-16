@@ -35,7 +35,6 @@ export const mapSignalFromDB = (signalFromDB: SignalFromDB): Signal => {
 export const mapUserFromDB = (userFromDB: UserFromDB): User => {
   return {
     actionOnOverload: userFromDB.action_on_overload,
-    activeHours: userFromDB.active_hours,
     mainContext: userFromDB.main_context,
     overloadSources: userFromDB.overload_sources,
     userId: userFromDB.user_id,

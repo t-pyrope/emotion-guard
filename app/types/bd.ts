@@ -1,6 +1,5 @@
 import {
   ActionOnOverload,
-  ActiveHours,
   MainContext,
   SignalType,
   StrictnessLevel,
@@ -21,7 +20,6 @@ export interface UserFromDB {
     | "context_switching"
   >;
   action_on_overload: ActionOnOverload;
-  active_hours: ActiveHours;
   summary_start_hour: number | null;
 }
 

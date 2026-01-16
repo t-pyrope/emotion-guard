@@ -7,7 +7,7 @@ import { MorningCheckin, Signal, SignalType, User } from "@/app/types";
 import { useState } from "react";
 import { formatModeWithSubtitle } from "@/app/utils/formatModeWithSubtitle";
 import { LoadingBar } from "@/app/components/LoadingBar";
-import { computeDayState, getHourAsNumber } from "@/app/utils";
+import { computeDayState } from "@/app/utils";
 
 export const DayStateBody = ({
   signals,
@@ -19,9 +19,7 @@ export const DayStateBody = ({
   user: User;
 }) => {
   const [dayState, setDayState] = useState(() => {
-    const userHour = getHourAsNumber(user.timezone);
-
-    return computeDayState(morning, signals, user, userHour);
+    return computeDayState(morning, signals, user);
   });
   const [signalsLocal, setSignalsLocal] = useState<Signal[]>(signals);
   const [isLoading, setIsLoading] = useState(false);
@@ -54,14 +52,7 @@ export const DayStateBody = ({
           createdAt: json.createdAt,
         });
 
-        const userHour = getHourAsNumber(user.timezone);
-
-        const newDayState = computeDayState(
-          morning,
-          newSignalsLocal,
-          user,
-          userHour,
-        );
+        const newDayState = computeDayState(morning, newSignalsLocal, user);
 
         setDayState(newDayState);
         setSignalsLocal(newSignalsLocal);

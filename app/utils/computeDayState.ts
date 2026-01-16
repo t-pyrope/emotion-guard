@@ -105,29 +105,6 @@ const ACTION_ON_OVERLOAD_MODIFIERS = {
   },
 } as const;
 
-const ACTIVE_HOURS_MODIFIERS = {
-  morning: {
-    earlyEveningRestrictions: true,
-    lateTolerance: false,
-    irregular: false,
-  },
-  day: {
-    earlyEveningRestrictions: false,
-    lateTolerance: false,
-    irregular: false,
-  },
-  evening: {
-    earlyEveningRestrictions: false,
-    lateTolerance: true,
-    irregular: false,
-  },
-  irregular: {
-    earlyEveningRestrictions: false,
-    lateTolerance: false,
-    irregular: true,
-  },
-} as const;
-
 // влияет на базовую доступную энергию
 const BODY_STATE_IMPACT = {
   1: 2,
@@ -153,7 +130,6 @@ export const computeDayState = (
   morning: MorningCheckin,
   signals: Signal[],
   user: User,
-  userHour: number,
 ): DayState => {
   let loadScore = 0;
 
@@ -167,9 +143,6 @@ export const computeDayState = (
 
   const contactsImpact = CONTACTS_IMPACT[morning.contactsExpected];
   loadScore += Math.max(0, contactsImpact.load - 1);
-
-  const activeHours = ACTIVE_HOURS_MODIFIERS[user.activeHours];
-  const isLate = userHour >= 18;
 
   for (const signal of signals) {
     let weight = SIGNAL_WEIGHTS[signal.signalType] ?? 0;
@@ -250,9 +223,7 @@ export const computeDayState = (
       allowDeepWork:
         mode === "normal" &&
         !(
-          overloadFlags.restrictDeepWorkEarly ||
-          actionMod.restrictDeepWorkEarly ||
-          (activeHours.earlyEveningRestrictions && isLate)
+          overloadFlags.restrictDeepWorkEarly || actionMod.restrictDeepWorkEarly
         ),
 
       showWarnings:
@@ -260,8 +231,7 @@ export const computeDayState = (
         context.earlyWarnings ||
         dailyLoad.earlyWarnings ||
         overloadFlags.earlyWarnings ||
-        actionMod.earlyWarnings ||
-        activeHours.irregular,
+        actionMod.earlyWarnings,
     },
   };
 };

@@ -16,7 +16,6 @@ export interface OnboardingFormValues {
   overloadSources: string[];
   actionOnOverload: string;
   strictnessLevel: string;
-  activeHours: string;
 }
 
 export interface MorningCheckInQuestion {

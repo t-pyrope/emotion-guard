@@ -1,6 +1,7 @@
 import {
   formatDate,
   formatMode,
+  getTimeline,
   mapMorningFromDB,
   mapSignalFromDB,
   mapUserFromDB,
@@ -8,7 +9,7 @@ import {
 import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
 import { SignalFromDB } from "@/app/types";
-import { SIGNALS_DAILY_SUMMARY, SIGNALS_FLAT } from "@/app/constants";
+import { SIGNALS_FLAT } from "@/app/constants";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 import { PageContainer } from "@/app/components/PageContainer";
 import { computeDayState } from "@/app/utils";
@@ -41,31 +42,43 @@ export default async function Page() {
     .filter((signal) => signal.count !== 0)
     .sort((a, b) => (a.count > b.count ? 1 : -1));
 
-  const userHour = Number(
-    new Intl.DateTimeFormat("en-US", {
-      timeZone: user.timezone,
-      hour: "2-digit",
-      hour12: false,
-    }).format(new Date()),
-  );
+  const timeline = getTimeline(morning, user, signals);
 
-  const dayState = computeDayState(morning, signals, user, userHour);
+  const modeChangedCount = timeline.filter((log) =>
+    log.message.includes("Mode changed to"),
+  ).length;
+  const firstDayState = computeDayState(morning, [], user);
+  const mostCommonSignal = signalsWithCount.at(-1);
 
   return (
     <PageContainer title="Daily summary">
-      <div className="flex flex-col gap-2 w-full">
-        <div>The system stayed in {formatMode(dayState.mode)} today</div>
-        <div>
-          {signalsWithCount.length > 0 ? (
-            <>
-              {signalsWithCount.map((signal) => (
-                <p key={signal.value}>{SIGNALS_DAILY_SUMMARY[signal.value]}</p>
-              ))}
-            </>
-          ) : (
-            <>No signals recorded today</>
-          )}
+      <div className="flex flex-col gap-3 w-full">
+        <div className="flex flex-col gap-1 w-full">
+          <h3 className="text-lg">Day overview</h3>
+          <ul>
+            <li>The system started in {formatMode(firstDayState.mode)}</li>
+            <li>
+              {modeChangedCount > 0
+                ? `The mode changed ${modeChangedCount} ${modeChangedCount === 1 ? "time" : "times"} during the day`
+                : `The mode didn't change during the day`}
+            </li>
+          </ul>
         </div>
+        <div className="flex flex-col gap-1 w-full">
+          <h3 className="text-lg">Signals & recovery</h3>
+          <ul>
+            <li>
+              {signals.length} signal{signals.length !== 1 && "s"} logged
+            </li>
+            {signalsWithCount.length > 0 && (
+              <li>
+                Most common: {mostCommonSignal?.value} (
+                {mostCommonSignal?.count})
+              </li>
+            )}
+          </ul>
+        </div>
+        <div>The day is now closed.</div>
       </div>
     </PageContainer>
   );
