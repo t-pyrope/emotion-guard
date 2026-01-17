@@ -21,7 +21,7 @@ export default async function Page() {
 
   const today = formatDate(user.timezone);
 
-  const morning = mapMorningFromDB(morningFromDB!);
+  const morning = morningFromDB ? mapMorningFromDB(morningFromDB) : undefined;
 
   const signalsFromDB = (await sql`
     SELECT *

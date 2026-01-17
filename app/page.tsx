@@ -34,10 +34,7 @@ export default async function Home() {
           </ul>
         </div>
         <div className="flex items-center gap-2">
-          <Button title="Start onboarding" href="/onboarding" />
-          <p className="mt-1 text-zinc-700">
-            Takes 2–3 minutes. No account required.
-          </p>
+          <Button title="Start using Daily Signal" href="/day-state" />
         </div>
       </main>
     </div>

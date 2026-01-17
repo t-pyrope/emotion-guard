@@ -20,21 +20,21 @@ export async function PUT() {
 
   const today = formatDate(user.timezone);
 
-  const result = await sql`
+  const [daySession] =
+    await sql`SELECT * from day_sessions WHERE user_id = ${userId} AND day_date = ${today}`;
+
+  if (!daySession) {
+    await sql`
+        INSERT INTO day_sessions (user_id, day_date, state, closed_at)
+        VALUES (${userId}, ${today}, 'closed', now())`;
+  } else {
+    await sql`
     UPDATE day_sessions
     SET state = 'closed',
         closed_at = now()
     WHERE user_id = ${userId}
       AND day_date = ${today}
-      AND state = 'open'
-    RETURNING id;
   `;
-
-  if (result.length === 0) {
-    return NextResponse.json(
-      { message: "Day already closed or not found" },
-      { status: 200 },
-    );
   }
 
   return NextResponse.json({ ok: true });

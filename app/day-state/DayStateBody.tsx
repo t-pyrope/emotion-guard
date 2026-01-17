@@ -15,7 +15,7 @@ export const DayStateBody = ({
   user,
 }: {
   signals: Signal[];
-  morning: MorningCheckin;
+  morning?: MorningCheckin;
   user: User;
 }) => {
   const [dayState, setDayState] = useState(() => {
@@ -33,7 +33,7 @@ export const DayStateBody = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ signal, daySessionId: morning.id }),
+        body: JSON.stringify({ signal, daySessionId: morning?.id }),
       });
 
       const json = await res.json();

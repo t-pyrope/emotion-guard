@@ -53,7 +53,7 @@ export const MorningCheckInForm = () => {
       )}
 
       <div className="text-base mt-4 flex gap-3 w-full items-center flex-col lg:flex-row">
-        <Button isDisabled={!isValid} title="Start the day" type="submit" />
+        <Button isDisabled={!isValid} title="Save and continue" type="submit" />
         <p
           className={`text-muted-foreground transition-opacity duration-250 ${isValid ? "opacity-0" : "opacity-100"}`}
         >

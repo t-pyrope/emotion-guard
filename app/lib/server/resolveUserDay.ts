@@ -6,14 +6,13 @@ import { formatDate, getHourAsNumber } from "@/app/utils";
 export type UserDayStatus =
   | "no-user"
   | "needs-onboarding"
-  | "no-checkin"
   | "day-active"
   | "day-summary";
 
 export type UserDayResolution = {
   status: UserDayStatus;
   user: UserFromDB | null;
-  morning: MorningCheckinFromDB | null;
+  morning?: MorningCheckinFromDB | null;
 };
 
 export async function resolveUserDay(): Promise<UserDayResolution> {
@@ -41,16 +40,12 @@ export async function resolveUserDay(): Promise<UserDayResolution> {
       AND day_date = ${today}
     LIMIT 1
   `;
-  const morning = mornings[0] as MorningCheckinFromDB;
-
-  if (!morning) {
-    return { status: "no-checkin", user, morning: null };
-  }
+  const morning = mornings[0] as MorningCheckinFromDB | undefined;
 
   const hour = getHourAsNumber(user.timezone);
 
   if (
-    morning.state === "closed" ||
+    morning?.state === "closed" ||
     (user.summary_start_hour && hour >= user.summary_start_hour)
   ) {
     return { status: "day-summary", user, morning };

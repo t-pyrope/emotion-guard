@@ -34,11 +34,11 @@ export interface MorningCheckinFromDB {
   id: string;
   user_id: string;
   day_date: string;
-  sleep_level: 1 | 2 | 3;
-  body_state: 1 | 2 | 3;
-  mental_state: 1 | 2 | 3;
-  contacts_expected: 1 | 2 | 3;
-  resource_level: 1 | 2 | 3;
+  sleep_level?: 1 | 2 | 3 | null;
+  body_state?: 1 | 2 | 3 | null;
+  mental_state?: 1 | 2 | 3 | null;
+  contacts_expected?: 1 | 2 | 3 | null;
+  resource_level?: 1 | 2 | 3 | null;
   created_at: string;
   state: "open" | "closed";
 }

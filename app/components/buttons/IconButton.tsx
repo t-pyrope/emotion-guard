@@ -17,17 +17,37 @@ export const IconButton = ({
   return (
     <button
       onClick={onClickAction}
-      className={`
-    rounded-full flex items-center justify-center transition-all
-    ${size === "lg" && "h-12 w-12 shadow-lg"}
-    ${size === "md" && "h-10 w-10 shadow-sm"}
-    ${variant === "dark" && "bg-slate-800 text-white hover:bg-neutral-950"}
-    ${variant === "light" && "bg-white text-neutral-600 shadow-neutral-200 hover:text-neutral-700"}
-    hover:scale-[1.02] active:scale-95
-  `}
       aria-label={label}
+      className={`
+        group
+        rounded-full
+        flex items-center
+        overflow-hidden
+        transition-all duration-200 ease-out
+        ${size === "lg" && "h-12 max-w-12 px-3"}
+        ${size === "md" && "h-10 max-w-10 px-2"}
+        hover:max-w-56 focus-visible:max-w-56
+        ${variant === "dark" && "bg-slate-800 text-white hover:bg-neutral-950"}
+        ${variant === "light" && "bg-white text-neutral-600 shadow-neutral-200 hover:text-neutral-700"}
+      `}
     >
-      {icon}
+      <span className="flex-shrink-0">{icon}</span>
+
+      <span
+        className={`
+          ml-2
+          whitespace-nowrap
+          opacity-0
+          translate-x-[-4px]
+          transition-all duration-150 ease-out
+          group-hover:opacity-100
+          group-hover:translate-x-0
+          group-focus-visible:opacity-100
+          group-focus-visible:translate-x-0
+        `}
+      >
+        {label}
+      </span>
     </button>
   );
 };

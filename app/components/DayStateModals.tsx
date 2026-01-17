@@ -20,7 +20,7 @@ export const DayStateModals = ({
 }: {
   logSignalAction: (signalType: SignalType) => void;
   user: User;
-  morning: MorningCheckin;
+  morning?: MorningCheckin;
   signals: Signal[];
 }) => {
   const [modal, setModal] = useState<
@@ -91,7 +91,7 @@ export const DayStateModals = ({
         />
         <IconButton
           onClickAction={() => setModal("system-log")}
-          label="Open System Log / Day Timeline"
+          label="Open Day Timeline"
           icon={<FiClock size={20} />}
           size="md"
           variant="light"

@@ -1,5 +1,7 @@
+import { DateTime } from "luxon";
+
 import { DayState, MorningCheckin, Signal, User } from "@/app/types";
-import { computeDayState } from "@/app/utils";
+import { computeDayState, isMorningCheckedIn } from "@/app/utils";
 import { SIGNALS_DAILY_SUMMARY } from "@/app/constants";
 
 interface TimelineEvent {
@@ -9,19 +11,32 @@ interface TimelineEvent {
 }
 
 export const getTimeline = (
-  morning: MorningCheckin,
+  morning: MorningCheckin | undefined,
   user: User,
   signals: Signal[],
 ) => {
-  const firstDayState = computeDayState(morning, [], user);
+  const firstDayState = computeDayState(undefined, [], user);
+  const morningDayState = computeDayState(morning, [], user);
+  const startOfToday = DateTime.now()
+    .setZone(user.timezone)
+    .startOf("day")
+    .toJSDate();
 
   const timeline: TimelineEvent[] = [
     {
-      createdAt: morning.createdAt,
+      createdAt: startOfToday.toISOString(),
       message: `Mode set to ${firstDayState.mode}`,
-      id: morning.id,
+      id: "0",
     },
   ];
+
+  if (morning && isMorningCheckedIn(morning)) {
+    timeline.push({
+      createdAt: morning.createdAt,
+      message: `Morning check in values entered.${morningDayState.mode !== firstDayState.mode ? ` Mode changed to ${morningDayState.mode}` : ""}`,
+      id: morning.id,
+    });
+  }
 
   if (signals.length) {
     let prevState: DayState = firstDayState;

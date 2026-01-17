@@ -5,5 +5,6 @@ export { formatModeWithSubtitle } from "./formatModeWithSubtitle";
 export { getHourAsNumber } from "./getHourAsNumber";
 export { getRuleMessages } from "./getRuleMessages";
 export { getTimeline } from "./getTimeline";
+export { isMorningCheckedIn } from "./isMorningCheckedIn";
 
 export * from "./mappers";

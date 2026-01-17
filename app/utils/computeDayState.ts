@@ -127,21 +127,34 @@ const CONTACTS_IMPACT = {
 } as const;
 
 export const computeDayState = (
-  morning: MorningCheckin,
+  morning: MorningCheckin | undefined,
   signals: Signal[],
   user: User,
 ): DayState => {
   let loadScore = 0;
 
-  loadScore += 3 - morning.sleepLevel;
-  loadScore += 3 - morning.resourceLevel;
+  loadScore += 3 - (morning?.sleepLevel ?? 0);
+  loadScore += 3 - (morning?.resourceLevel ?? 0);
 
-  loadScore += Math.max(0, BODY_STATE_IMPACT[morning.bodyState] - 1);
+  loadScore += Math.max(
+    0,
+    (morning?.bodyState !== undefined && morning?.bodyState !== null
+      ? BODY_STATE_IMPACT[morning.bodyState]
+      : 1) - 1,
+  );
 
-  const mentalImpact = MENTAL_STATE_IMPACT[morning.mentalState];
+  const mentalImpact =
+    morning?.mentalState !== undefined && morning?.mentalState !== null
+      ? MENTAL_STATE_IMPACT[morning.mentalState]
+      : { load: 0, restrictDeepWorkEarly: false };
+
   loadScore += Math.max(0, mentalImpact.load - 1);
 
-  const contactsImpact = CONTACTS_IMPACT[morning.contactsExpected];
+  const contactsImpact =
+    morning?.contactsExpected !== undefined &&
+    morning?.contactsExpected !== null
+      ? CONTACTS_IMPACT[morning.contactsExpected]
+      : { load: 0, socialCost: false };
   loadScore += Math.max(0, contactsImpact.load - 1);
 
   for (const signal of signals) {

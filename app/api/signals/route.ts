@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { sql } from "@/lib/db";
+import { formatDate } from "@/app/utils";
+import { getUser } from "@/app/lib/getUser";
 
 export async function POST(req: Request) {
   const userId = (await cookies()).get("user_id")?.value;
@@ -8,10 +10,31 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { signal, daySessionId } = await req.json();
+  const { signal } = await req.json();
 
   if (!signal) {
     return NextResponse.json({ error: "No signal" }, { status: 400 });
+  }
+
+  const user = await getUser(userId);
+
+  if (!user) {
+    return NextResponse.json({ error: "No user" }, { status: 400 });
+  }
+
+  const today = formatDate(user.timezone);
+
+  const [daySession] =
+    await sql`SELECT * from day_sessions WHERE user_id = ${userId} AND day_date = ${today}`;
+
+  let daySessionId = daySession?.id;
+
+  if (!daySession) {
+    const [row] = await sql`
+        INSERT INTO day_sessions (user_id, day_date)
+        VALUES (${userId}, ${today})
+        RETURNING id`;
+    daySessionId = row.id;
   }
 
   const [row] = await sql`
