@@ -33,7 +33,7 @@ export const getTimeline = (
   if (morning && isMorningCheckedIn(morning)) {
     timeline.push({
       createdAt: morning.createdAt,
-      message: `Morning check in values entered.${morningDayState.mode !== firstDayState.mode ? ` Mode changed to ${morningDayState.mode}` : ""}`,
+      message: `Morning check in values entered.${morningDayState.mode !== firstDayState.mode ? ` Mode → ${morningDayState.mode}` : ""}`,
       id: morning.id,
     });
   }
@@ -52,7 +52,7 @@ export const getTimeline = (
         JSON.stringify(state.rules) !== JSON.stringify(prevState.rules);
 
       if (isModeChanged || isRulesChanged) {
-        message = `${message}.${isModeChanged ? ` Mode changed to ${state.mode}.` : ""}${isRulesChanged ? " Rules have changed." : ""}`;
+        message = `${message}.${isModeChanged ? ` Mode → ${state.mode}.` : ""}${isRulesChanged ? " Rules have changed." : ""}`;
       }
 
       timeline.push({

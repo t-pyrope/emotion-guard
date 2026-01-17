@@ -15,22 +15,20 @@ export default async function Home() {
         </h1>
         <div>
           <p className="mb-1">
-            A lightweight system for daily self-regulation.
-          </p>
-          <p>
-            Morning check-ins, adaptive daily rules, and simple signals to
-            prevent overload.
+            A deterministic system that detects overload and manages cognitive
+            and social load during work or study days. It uses short signals and
+            fixed rules instead of emotional tracking, goals, or habit streaks.
           </p>
         </div>
         <div>
           <p className="mb-1">How it works:</p>
           <ul className="list-disc pl-5 flex flex-col gap-1">
-            <li>You start with a short morning check-in.</li>
+            <li>Optional morning signals (30–60 seconds).</li>
+            <li>The system continuously computes your day state.</li>
+            <li>When load increases, rules tighten automatically.</li>
             <li>
-              The system adapts daily rules based on your state and real-time
-              signals.
+              Signals in → rules out. No reflection, no goals, no pressure.
             </li>
-            <li>No goals, no streaks, no pressure.</li>
           </ul>
         </div>
         <div className="flex items-center gap-2">
