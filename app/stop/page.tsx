@@ -18,7 +18,7 @@ export default function StopPage() {
           </ul>
         </div>
         <div className="flex gap-2 flex-col items-center">
-          <Button title="Accept stop" />
+          <Button title="Accept stop and close the day" />
           <Button title="Ignore and continue" variant="outlined" size="small" />
         </div>
       </div>

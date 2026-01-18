@@ -12,6 +12,9 @@ const SIGNAL_WEIGHTS: Record<SignalType, number> = {
   took_extra: 1,
   ignored_warning: 2,
   all_good: -1,
+  stop_triggered: 0,
+  stop_ignored: 0,
+  stop_accepted: 0,
 };
 
 const DAILY_LOAD_MODIFIERS = {

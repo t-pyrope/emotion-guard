@@ -3,7 +3,10 @@ export type SignalType =
   | "external_pressure"
   | "took_extra"
   | "ignored_warning"
-  | "all_good";
+  | "all_good"
+  | "stop_triggered"
+  | "stop_accepted"
+  | "stop_ignored";
 
 export type StrictnessLevel = "gentle" | "standard" | "strict";
 

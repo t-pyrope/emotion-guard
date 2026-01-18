@@ -25,6 +25,9 @@ export const SIGNALS_DAILY_SUMMARY: { [key in SignalType]: string } = {
   took_extra: "Extra responsibilities appeared",
   ignored_warning: "Rest didn’t happen when needed",
   all_good: "You regained energy",
+  stop_accepted: "Stop accepted",
+  stop_ignored: "Stop ignored",
+  stop_triggered: "Stop triggered",
 };
 
 export const SIGNALS_FLAT = SIGNALS.map((signal) => signal.signals).flat();
