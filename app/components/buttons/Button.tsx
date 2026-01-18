@@ -12,7 +12,7 @@ export const Button = ({
   isDisabled?: boolean;
   title: string;
   onClick?: () => void;
-  variant?: "standard" | "error";
+  variant?: "standard" | "error" | "outlined";
   size?: "medium" | "small";
   type?: "submit" | "reset" | "button";
   href?: string;
@@ -20,11 +20,12 @@ export const Button = ({
   const className = `
       flex text-nowrap items-center w-fit
       justify-center gap-2 rounded-full
-      ${variant === "standard" && "bg-slate-800 hover:bg-slate-950 dark:hover:bg-[#ccc]"}
-      ${variant === "error" && "bg-rose-800/85 hover:bg-rose-900/90"}
-      ${size === "medium" && "font-medium h-12"}
-      ${size === "small" && "font-small h-10"}
-      px-6 text-background hover:scale-[1.01]
+      ${variant === "standard" && "bg-slate-800 hover:bg-slate-950 dark:hover:bg-[#ccc] text-background"}
+      ${variant === "error" && "bg-rose-800/85 hover:bg-rose-900/90 text-background"}
+      ${variant === "outlined" && "border-2 border-slate-800 hover:bg-slate-50 text-slate-800"}
+      ${size === "medium" && "font-medium h-12 shadow-lg"}
+      ${size === "small" && "font-small h-10 shadow-sm"}
+      px-6 hover:scale-[1.01]
       disabled:opacity-75 transition-all
 `;
   return href ? (

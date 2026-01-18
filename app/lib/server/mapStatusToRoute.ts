@@ -5,13 +5,8 @@ export function mapStatusToRoute(status: UserDayStatus): string {
     case "no-user":
     case "needs-onboarding":
       return "/onboarding";
-
-    case "no-checkin":
-      return "/morning-check-in";
-
     case "day-summary":
       return "/daily-summary";
-
     case "day-active":
       return "/day-state";
   }
