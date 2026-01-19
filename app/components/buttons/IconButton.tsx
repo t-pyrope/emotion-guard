@@ -23,9 +23,9 @@ export const IconButton = ({
         rounded-full
         flex items-center
         overflow-hidden
-        transition-all duration-200 ease-out
-        ${size === "lg" && "h-12 max-w-12 px-3"}
-        ${size === "md" && "h-10 max-w-10 px-2"}
+        transition-all duration-300 ease-out
+        ${size === "lg" && "h-12 max-w-12 px-3 shadow-lg"}
+        ${size === "md" && "h-10 max-w-10 px-2 shadow-md"}
         hover:max-w-56 focus-visible:max-w-56
         ${variant === "dark" && "bg-slate-800 text-white hover:bg-neutral-950"}
         ${variant === "light" && "bg-white text-neutral-600 shadow-neutral-200 hover:text-neutral-700"}
