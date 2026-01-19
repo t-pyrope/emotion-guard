@@ -7,9 +7,6 @@ export const CloseTheDayButton = () => {
   const close = async () => {
     const res = await fetch("/api/close-the-day", {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
     });
 
     if (res.ok) {

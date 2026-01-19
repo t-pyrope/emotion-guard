@@ -1,5 +1,5 @@
-import { Button } from "@/app/components/buttons/Button";
 import { PageContainer } from "@/app/components/PageContainer";
+import { Actions } from "@/app/stop/Actions";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 
 export default async function StopPage() {
@@ -20,10 +20,7 @@ export default async function StopPage() {
             <li>No conversations</li>
           </ul>
         </div>
-        <div className="flex gap-2 flex-col items-center">
-          <Button title="Accept stop and close the day" />
-          <Button title="Ignore and continue" variant="outlined" size="small" />
-        </div>
+        <Actions />
       </div>
     </PageContainer>
   );
