@@ -1,13 +1,14 @@
 "use client";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 import { RulesList } from "@/app/day-state/RulesList";
 import { CloseTheDayButton } from "@/app/day-state/CloseTheDayButton";
 import { DayStateModals } from "@/app/components/DayStateModals";
 import { MorningCheckin, Signal, SignalType, User } from "@/app/types";
-import { useState } from "react";
 import { formatModeWithSubtitle } from "@/app/utils/formatModeWithSubtitle";
 import { LoadingBar } from "@/app/components/LoadingBar";
-import { computeDayState } from "@/app/utils";
+import { computeDayState, shouldStopTrigger } from "@/app/utils";
 
 export const DayStateBody = ({
   signals,
@@ -23,48 +24,58 @@ export const DayStateBody = ({
   });
   const [signalsLocal, setSignalsLocal] = useState<Signal[]>(signals);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
-  const logSignal = async (signal: SignalType) => {
-    setIsLoading(true);
-
-    try {
-      const res = await fetch("/api/signals", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ signal, daySessionId: morning?.id }),
-      });
-
-      const json = await res.json();
-
-      if (
-        "id" in json &&
-        json.id &&
-        typeof json.id === "string" &&
-        "createdAt" in json
-      ) {
-        const newSignalsLocal = [...signalsLocal];
-
-        newSignalsLocal.push({
-          id: json.id,
-          signalType: signal,
-          createdAt: json.createdAt,
+  const logSignal = useCallback(
+    async (signal: SignalType) => {
+      setIsLoading(true);
+      try {
+        const res = await fetch("/api/signals", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ signal, daySessionId: morning?.id }),
         });
-
-        const newDayState = computeDayState(morning, newSignalsLocal, user);
-
-        setDayState(newDayState);
-        setSignalsLocal(newSignalsLocal);
+        const json = await res.json();
+        if (
+          "id" in json &&
+          json.id &&
+          typeof json.id === "string" &&
+          "createdAt" in json
+        ) {
+          const newSignalsLocal = [...signalsLocal];
+          newSignalsLocal.push({
+            id: json.id,
+            signalType: signal,
+            createdAt: json.createdAt,
+          });
+          const newDayState = computeDayState(morning, newSignalsLocal, user);
+          setDayState(newDayState);
+          setSignalsLocal(newSignalsLocal);
+        }
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
+    },
+    [morning, signalsLocal, user],
+  );
   const mode = formatModeWithSubtitle(dayState.mode);
+  const isTriggerStop = shouldStopTrigger(signalsLocal, dayState.mode);
+  const isAlreadyTriggered = !!signalsLocal.find(
+    (signal) => signal.signalType === "stop_triggered",
+  );
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (isTriggerStop) {
+      if (isAlreadyTriggered) {
+        router.replace("/stop");
+      } else {
+        logSignal("stop_triggered");
+      }
+    }
+  }, [isAlreadyTriggered, isTriggerStop, logSignal, router, isLoading]);
 
   return (
     <>

@@ -6,5 +6,6 @@ export { getHourAsNumber } from "./getHourAsNumber";
 export { getRuleMessages } from "./getRuleMessages";
 export { getTimeline } from "./getTimeline";
 export { isMorningCheckedIn } from "./isMorningCheckedIn";
+export { shouldStopTrigger } from "./shouldStopTrigger";
 
 export * from "./mappers";
