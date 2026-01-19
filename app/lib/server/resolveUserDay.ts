@@ -1,13 +1,14 @@
 import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
-import { MorningCheckinFromDB, UserFromDB } from "@/app/types";
+import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { formatDate, getHourAsNumber } from "@/app/utils";
 
 export type UserDayStatus =
   | "no-user"
   | "needs-onboarding"
   | "day-active"
-  | "day-summary";
+  | "day-summary"
+  | "stop";
 
 export type UserDayResolution = {
   status: UserDayStatus;
@@ -49,6 +50,21 @@ export async function resolveUserDay(): Promise<UserDayResolution> {
     (user.summary_start_hour && hour >= user.summary_start_hour)
   ) {
     return { status: "day-summary", user, morning };
+  }
+
+  const signalsFromDB = (await sql`
+    SELECT *
+    FROM signals
+    WHERE user_id = ${userId}
+      AND created_at::date = ${today}
+    ORDER BY created_at ASC
+  `) as SignalFromDB[];
+
+  if (
+    signalsFromDB.some((signal) => signal.signal_type === "stop_triggered") &&
+    !signalsFromDB.some((signal) => signal.signal_type === "stop_ignored")
+  ) {
+    return { status: "stop", user, morning };
   }
 
   return { status: "day-active", user, morning };

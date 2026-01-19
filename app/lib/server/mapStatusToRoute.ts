@@ -9,5 +9,7 @@ export function mapStatusToRoute(status: UserDayStatus): string {
       return "/daily-summary";
     case "day-active":
       return "/day-state";
+    case "stop":
+      return "/stop";
   }
 }

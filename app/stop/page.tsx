@@ -1,7 +1,10 @@
 import { Button } from "@/app/components/buttons/Button";
 import { PageContainer } from "@/app/components/PageContainer";
+import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 
-export default function StopPage() {
+export default async function StopPage() {
+  await withUserDayGuard(["stop"]);
+
   return (
     <PageContainer>
       <div className="gap-10 flex flex-col items-center justify-center flex-1">
