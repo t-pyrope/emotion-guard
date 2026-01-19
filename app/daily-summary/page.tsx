@@ -38,7 +38,7 @@ export default async function Page() {
 
   const { user: userFromDB, morning: morningFromDB } = result;
   const user = mapUserFromDB(userFromDB!);
-  const morning = mapMorningFromDB(morningFromDB!);
+  const morning = morningFromDB ? mapMorningFromDB(morningFromDB) : undefined;
 
   const userId = (await cookies()).get("user_id")?.value;
 
@@ -102,7 +102,7 @@ export default async function Page() {
           <Block
             title="System intervention"
             listItems={[
-              `A stop was triggered${isStopAccepted && " and accepted"}.`,
+              `A stop was triggered${isStopAccepted ? " and accepted" : " and ignored"}.`,
             ]}
           />
         )}
