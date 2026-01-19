@@ -9,11 +9,13 @@ const OVERLOAD_TYPES = new Set<SignalType>([
 ]);
 
 export const shouldStopTrigger = (signals: Signal[], mode: string) => {
-  const oneHourAgo = +DateTime.now().minus({ hours: 1 }).toJSDate();
+  const oneHourAgo = DateTime.now().minus({ hours: 1 }).toJSDate();
 
   const hasRecentOverloadSignals =
     signals.filter((s) => {
-      return OVERLOAD_TYPES.has(s.signalType) && +s.createdAt >= oneHourAgo;
+      return (
+        OVERLOAD_TYPES.has(s.signalType) && new Date(s.createdAt) >= oneHourAgo
+      );
     }).length >= 4;
 
   return (
