@@ -33,12 +33,18 @@ const DAILY_LOAD_MODIFIERS = {
     earlyWarnings: true,
     socialTolerance: false,
   },
+  none: {
+    thresholdShift: 0,
+    earlyWarnings: false,
+    socialTolerance: false,
+  },
 } as const;
 
 const THRESHOLDS = {
   gentle: { limited: 4, protected: 6 },
   standard: { limited: 3, protected: 5 },
   strict: { limited: 2, protected: 4 },
+  none: { limited: 4, protected: 6 },
 } as const;
 
 const CONTEXT_MODIFIERS = {
@@ -55,6 +61,11 @@ const CONTEXT_MODIFIERS = {
   both: {
     loadBias: 1,
     earlyWarnings: true,
+    restrictSocialEarly: false,
+  },
+  none: {
+    loadBias: 0,
+    earlyWarnings: false,
     restrictSocialEarly: false,
   },
 } as const;
@@ -106,6 +117,11 @@ const ACTION_ON_OVERLOAD_MODIFIERS = {
     softenDayEarly: false,
     restrictDeepWorkEarly: true,
   },
+  none: {
+    earlyWarnings: false,
+    softenDayEarly: false,
+    restrictDeepWorkEarly: false,
+  },
 } as const;
 
 // влияет на базовую доступную энергию
@@ -132,12 +148,12 @@ const CONTACTS_IMPACT = {
 export const computeDayState = (
   morning: MorningCheckin | undefined,
   signals: Signal[],
-  user: User,
+  user: User | null,
 ): DayState => {
   let loadScore = 0;
 
-  loadScore += 3 - (morning?.sleepLevel ?? 0);
-  loadScore += 3 - (morning?.resourceLevel ?? 0);
+  loadScore += 3 - (morning?.sleepLevel ?? 3);
+  loadScore += 3 - (morning?.resourceLevel ?? 3);
 
   loadScore += Math.max(
     0,
@@ -165,7 +181,7 @@ export const computeDayState = (
 
     if (
       signal.signalType === "interaction_load" &&
-      user.overloadSources.includes("too_many_people")
+      user?.overloadSources.includes("too_many_people")
     ) {
       weight *= OVERLOAD_SOURCE_MODIFIERS.too_many_people.interactionMultiplier;
     }
@@ -173,16 +189,17 @@ export const computeDayState = (
     loadScore += weight;
   }
 
-  const context = CONTEXT_MODIFIERS[user.mainContext];
+  const context = CONTEXT_MODIFIERS[user?.mainContext ?? "none"];
   loadScore += context.loadBias;
 
-  const dailyLoad = DAILY_LOAD_MODIFIERS[user.typicalDailyLoad];
+  const dailyLoad = DAILY_LOAD_MODIFIERS[user?.typicalDailyLoad ?? "none"];
 
-  const actionMod = ACTION_ON_OVERLOAD_MODIFIERS[user.actionOnOverload];
+  const actionMod =
+    ACTION_ON_OVERLOAD_MODIFIERS[user?.actionOnOverload ?? "none"];
 
   let mode: DayState["mode"] = "normal";
 
-  const baseThresholds = THRESHOLDS[user.strictnessLevel];
+  const baseThresholds = THRESHOLDS[user?.strictnessLevel ?? "none"];
   const limitedThreshold = baseThresholds.limited - dailyLoad.thresholdShift;
   const protectedThreshold =
     baseThresholds.protected - dailyLoad.thresholdShift;
@@ -205,14 +222,16 @@ export const computeDayState = (
     earlyWarnings: false,
   };
 
-  for (const source of user.overloadSources) {
-    const mod = OVERLOAD_SOURCE_MODIFIERS[source];
-    if (!mod) continue;
+  if (user) {
+    for (const source of user.overloadSources) {
+      const mod = OVERLOAD_SOURCE_MODIFIERS[source];
+      if (!mod) continue;
 
-    if (mod.restrictSocialEarly) overloadFlags.restrictSocialEarly = true;
-    if (mod.restrictNewTasksEarly) overloadFlags.restrictNewTasksEarly = true;
-    if (mod.restrictDeepWorkEarly) overloadFlags.restrictDeepWorkEarly = true;
-    if (mod.earlyWarnings) overloadFlags.earlyWarnings = true;
+      if (mod.restrictSocialEarly) overloadFlags.restrictSocialEarly = true;
+      if (mod.restrictNewTasksEarly) overloadFlags.restrictNewTasksEarly = true;
+      if (mod.restrictDeepWorkEarly) overloadFlags.restrictDeepWorkEarly = true;
+      if (mod.earlyWarnings) overloadFlags.earlyWarnings = true;
+    }
   }
 
   if (mentalImpact.restrictDeepWorkEarly) {

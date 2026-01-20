@@ -9,6 +9,7 @@ import { MorningCheckin, Signal, SignalType, User } from "@/app/types";
 import { formatModeWithSubtitle } from "@/app/utils/formatModeWithSubtitle";
 import { LoadingBar } from "@/app/components/LoadingBar";
 import { computeDayState, shouldStopTrigger } from "@/app/utils";
+import { DEFAULT_TIMEZONE } from "@/app/constants";
 
 export const DayStateBody = ({
   signals,
@@ -17,7 +18,7 @@ export const DayStateBody = ({
 }: {
   signals: Signal[];
   morning?: MorningCheckin;
-  user: User;
+  user: User | null;
 }) => {
   const [dayState, setDayState] = useState(() => {
     return computeDayState(morning, signals, user);
@@ -30,6 +31,14 @@ export const DayStateBody = ({
     async (signal: SignalType) => {
       setIsLoading(true);
       try {
+        if (!user) {
+          await fetch("/api/users", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ timezone: DEFAULT_TIMEZONE }),
+          });
+        }
+
         const res = await fetch("/api/signals", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -51,6 +60,10 @@ export const DayStateBody = ({
           const newDayState = computeDayState(morning, newSignalsLocal, user);
           setDayState(newDayState);
           setSignalsLocal(newSignalsLocal);
+        }
+
+        if (!user) {
+          router.refresh();
         }
       } catch (e) {
         console.error(e);
@@ -93,7 +106,7 @@ export const DayStateBody = ({
 
         <RulesList rules={dayState.rules} />
 
-        <CloseTheDayButton />
+        <CloseTheDayButton isUser={!!user} />
       </div>
 
       <DayStateModals

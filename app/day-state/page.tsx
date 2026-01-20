@@ -11,15 +11,16 @@ import {
 import { DayStateBody } from "@/app/day-state/DayStateBody";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 import { PageContainer } from "@/app/components/PageContainer";
+import { DEFAULT_TIMEZONE } from "@/app/constants";
 
 export default async function Page() {
   const result = await withUserDayGuard(["day-active"]);
 
   const { user: userFromDB, morning: morningFromDB } = result;
-  const user = mapUserFromDB(userFromDB!);
+  const user = userFromDB ? mapUserFromDB(userFromDB) : null;
   const userId = (await cookies()).get("user_id")?.value;
 
-  const today = formatDate(user.timezone);
+  const today = formatDate(user ? user.timezone : DEFAULT_TIMEZONE);
 
   const morning = morningFromDB ? mapMorningFromDB(morningFromDB) : undefined;
 

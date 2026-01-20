@@ -11,7 +11,7 @@ export const DayTimelineModal = ({
   onCloseModal: () => void;
   signals: Signal[];
   morning?: MorningCheckin;
-  user: User;
+  user: User | null;
 }) => {
   const timeline = getTimeline(morning, user, signals);
 

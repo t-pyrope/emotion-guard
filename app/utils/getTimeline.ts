@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 
 import { DayState, MorningCheckin, Signal, User } from "@/app/types";
 import { computeDayState, isMorningCheckedIn } from "@/app/utils";
-import { SIGNALS_DAILY_SUMMARY } from "@/app/constants";
+import { DEFAULT_TIMEZONE, SIGNALS_DAILY_SUMMARY } from "@/app/constants";
 
 interface TimelineEvent {
   createdAt: string;
@@ -12,13 +12,13 @@ interface TimelineEvent {
 
 export const getTimeline = (
   morning: MorningCheckin | undefined,
-  user: User,
+  user: User | null,
   signals: Signal[],
 ) => {
   const firstDayState = computeDayState(undefined, [], user);
   const morningDayState = computeDayState(morning, [], user);
   const startOfToday = DateTime.now()
-    .setZone(user.timezone)
+    .setZone(user?.timezone || DEFAULT_TIMEZONE)
     .startOf("day")
     .toJSDate();
 

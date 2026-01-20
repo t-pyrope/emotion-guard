@@ -1,5 +1,5 @@
 "use client";
-import { MorningCheckInValues } from "@/app/types";
+import { MorningCheckInValues, UserFromDB } from "@/app/types";
 import { useForm } from "react-hook-form";
 import { redirect } from "next/navigation";
 
@@ -7,8 +7,9 @@ import { MORNING_CHECK_IN_QUESTIONS } from "@/app/components/morning-check-in-qu
 import { RadioGroup } from "@/app/components/RadioGroup";
 import { Button } from "@/app/components/buttons/Button";
 import { FormProgress } from "@/app/components/FormProgress";
+import { DEFAULT_TIMEZONE } from "@/app/constants";
 
-export const MorningCheckInForm = () => {
+export const MorningCheckInForm = ({ user }: { user: UserFromDB | null }) => {
   const {
     register,
     handleSubmit,
@@ -18,6 +19,14 @@ export const MorningCheckInForm = () => {
   const values = watch();
 
   const send = async (data: MorningCheckInValues) => {
+    if (!user) {
+      await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ timezone: DEFAULT_TIMEZONE }),
+      });
+    }
+
     const res = await fetch("/api/morning-check-in", {
       method: "POST",
       headers: {

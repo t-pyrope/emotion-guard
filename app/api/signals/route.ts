@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   const user = await getUser(userId);
 
   if (!user) {
-    return NextResponse.json({ error: "No user" }, { status: 400 });
+    return NextResponse.json({ error: "No user" }, { status: 404 });
   }
 
   const today = formatDate(user.timezone);

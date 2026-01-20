@@ -31,3 +31,6 @@ export const SIGNALS_DAILY_SUMMARY: { [key in SignalType]: string } = {
 };
 
 export const SIGNALS_FLAT = SIGNALS.map((signal) => signal.signals).flat();
+
+export const DEFAULT_TIMEZONE =
+  Intl.DateTimeFormat().resolvedOptions().timeZone;

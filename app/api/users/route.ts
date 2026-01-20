@@ -14,11 +14,11 @@ export async function POST(req: Request) {
 
   const {
     timezone,
-    strictnessLevel,
-    mainContext,
-    typicalDailyLoad,
-    overloadSources,
-    actionOnOverload,
+    strictnessLevel = null,
+    mainContext = null,
+    typicalDailyLoad = null,
+    overloadSources = [],
+    actionOnOverload = null,
   } = body;
 
   await sql`

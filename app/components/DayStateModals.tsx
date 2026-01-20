@@ -19,7 +19,7 @@ export const DayStateModals = ({
   signals,
 }: {
   logSignalAction: (signalType: SignalType) => void;
-  user: User;
+  user: User | null;
   morning?: MorningCheckin;
   signals: Signal[];
 }) => {
@@ -51,6 +51,8 @@ export const DayStateModals = ({
   };
 
   const resetData = async () => {
+    if (!user) return;
+
     try {
       const res = await fetch("/api/user", {
         method: "DELETE",
@@ -58,7 +60,7 @@ export const DayStateModals = ({
 
       if (res.ok) {
         closeModal();
-        router.replace("/onboarding");
+        router.replace("/");
       }
     } catch (e) {
       console.error(e);

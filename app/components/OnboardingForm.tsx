@@ -10,8 +10,7 @@ import { FormProgress } from "@/app/components/FormProgress";
 import { OnboardingFormValues } from "../types";
 import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
 import { LoadingBar } from "@/app/components/LoadingBar";
-
-const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+import { DEFAULT_TIMEZONE } from "@/app/constants";
 
 export const OnboardingForm = () => {
   const {
@@ -31,7 +30,7 @@ export const OnboardingForm = () => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ ...data, timezone }),
+      body: JSON.stringify({ ...data, timezone: DEFAULT_TIMEZONE }),
     });
 
     if (res.ok) {
@@ -61,11 +60,7 @@ export const OnboardingForm = () => {
       )}
 
       <div className="text-base mt-4 flex gap-3 w-full items-center flex-col lg:flex-row">
-        <Button
-          isDisabled={!isValid}
-          title="Start using Daily Signal"
-          type="submit"
-        />
+        <Button isDisabled={!isValid} title="Save and continue" type="submit" />
         <p
           className={`text-muted-foreground transition-opacity duration-250 ${
             isValid ? "opacity-0" : "opacity-100"

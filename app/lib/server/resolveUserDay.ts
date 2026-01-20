@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { formatDate, getHourAsNumber } from "@/app/utils";
+import { DEFAULT_TIMEZONE } from "@/app/constants";
 
 export type UserDayStatus =
   | "no-user"
@@ -19,20 +20,12 @@ export type UserDayResolution = {
 export async function resolveUserDay(): Promise<UserDayResolution> {
   const userId = (await cookies()).get("user_id")?.value;
 
-  if (!userId) {
-    return { status: "no-user", user: null, morning: null };
-  }
-
   const users =
     await sql`SELECT * FROM users WHERE user_id = ${userId} LIMIT 1`;
 
-  const user = users[0] as UserFromDB;
+  const user = (users[0] || null) as UserFromDB | null;
 
-  if (!user) {
-    return { status: "needs-onboarding", user: null, morning: null };
-  }
-
-  const today = formatDate(user.timezone);
+  const today = formatDate(user ? user.timezone : DEFAULT_TIMEZONE);
 
   const mornings = await sql`
     SELECT *
@@ -43,13 +36,14 @@ export async function resolveUserDay(): Promise<UserDayResolution> {
   `;
   const morning = mornings[0] as MorningCheckinFromDB | undefined;
 
-  const hour = getHourAsNumber(user.timezone);
-
-  if (
-    morning?.state === "closed" ||
-    (user.summary_start_hour && hour >= user.summary_start_hour)
-  ) {
-    return { status: "day-summary", user, morning };
+  if (user) {
+    const hour = getHourAsNumber(user.timezone);
+    if (
+      morning?.state === "closed" ||
+      (user.summary_start_hour && hour >= user.summary_start_hour)
+    ) {
+      return { status: "day-summary", user, morning };
+    }
   }
 
   const signalsFromDB = (await sql`

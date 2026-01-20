@@ -1,10 +1,13 @@
 "use client";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+
 import { Modal } from "@/app/components/modals/Modal";
 import { ONBOARDING_QUESTIONS } from "@/app/components/onboarding-questions";
 import { Button } from "@/app/components/buttons/Button";
 import { User } from "@/app/types";
 import { Select } from "@/app/components/Select";
-import { useForm } from "react-hook-form";
+import { DEFAULT_TIMEZONE } from "@/app/constants";
 
 const OPTIONS = [
   { value: "manual", label: "Only after I close the day" },
@@ -28,23 +31,36 @@ export const SettingsModal = ({
   resetDataAction,
 }: {
   onCloseModalAction: () => void;
-  user: User;
+  user: User | null;
   resetDataAction: () => void;
 }) => {
+  const router = useRouter();
   const { register, handleSubmit } = useForm<SettingsValues>({
     values: {
       summaryStartHour:
-        user.summaryStartHour === null
+        !user || user.summaryStartHour === null
           ? "manual"
           : user.summaryStartHour.toString(),
     },
   });
+
+  const openOnboarding = () => {
+    router.push("/onboarding");
+  };
 
   const submit = async (data: SettingsValues) => {
     const body = JSON.stringify({
       summaryStartHour:
         data.summaryStartHour === "manual" ? null : +data.summaryStartHour,
     });
+
+    if (!user) {
+      await fetch("/api/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ timezone: DEFAULT_TIMEZONE }),
+      });
+    }
 
     const res = await fetch("/api/user", {
       method: "PUT",
@@ -55,7 +71,11 @@ export const SettingsModal = ({
     });
 
     if (res.ok) {
-      onCloseModalAction();
+      if (!user) {
+        router.refresh();
+      } else {
+        onCloseModalAction();
+      }
     }
   };
 
@@ -67,15 +87,15 @@ export const SettingsModal = ({
             <div key={question.radioGroupName} className="pb-2">
               <div className="font-medium">{question.question}</div>
               <div>
-                {
-                  question.answers.find(
-                    (answer) =>
-                      answer.value ===
-                      (question.radioGroupName === "overloadSources"
-                        ? user[question.radioGroupName]?.[0]
-                        : user[question.radioGroupName]),
-                  )?.label
-                }
+                {user
+                  ? question.answers.find(
+                      (answer) =>
+                        answer.value ===
+                        (question.radioGroupName === "overloadSources"
+                          ? user[question.radioGroupName]?.[0]
+                          : user[question.radioGroupName]),
+                    )?.label
+                  : "--"}
               </div>
             </div>
           ))}
@@ -86,12 +106,22 @@ export const SettingsModal = ({
             {...register("summaryStartHour")}
           />
         </div>
-        <Button
-          title="Reset all data and start over"
-          variant="error"
-          size="small"
-          onClick={resetDataAction}
-        />
+        <div className="flex gap-1">
+          <Button
+            title="Open onboarding"
+            size="small"
+            onClick={openOnboarding}
+          />
+
+          {user && (
+            <Button
+              title="Reset all data"
+              variant="error"
+              size="small"
+              onClick={resetDataAction}
+            />
+          )}
+        </div>
 
         <Button title="Submit" size="small" type="submit" />
       </form>
