@@ -62,15 +62,20 @@ export const DayStateBody = ({
   );
   const mode = formatModeWithSubtitle(dayState.mode);
   const isTriggerStop = shouldStopTrigger(signalsLocal, dayState.mode);
-  const isAlreadyTriggered = !!signalsLocal.find(
+  const isAlreadyTriggered = signalsLocal.some(
     (signal) => signal.signalType === "stop_triggered",
+  );
+  const wasStopIgnored = signalsLocal.some(
+    ({ signalType }) => signalType === "stop_ignored",
   );
 
   useEffect(() => {
     if (isLoading) return;
     if (isTriggerStop) {
       if (isAlreadyTriggered) {
-        router.replace("/stop");
+        if (!wasStopIgnored) {
+          router.replace("/stop");
+        }
       } else {
         logSignal("stop_triggered");
       }
