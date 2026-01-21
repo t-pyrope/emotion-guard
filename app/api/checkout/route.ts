@@ -3,11 +3,24 @@ import Stripe from "stripe";
 import { cookies } from "next/headers";
 import { getUser } from "@/app/lib/getUser";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-12-15.clover",
-});
+let stripe: Stripe | null = null;
+
+function getStripe() {
+  if (!process.env.STRIPE_SECRET_KEY) {
+    throw new Error("STRIPE_SECRET_KEY is not set");
+  }
+
+  if (!stripe) {
+    stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+      apiVersion: "2025-12-15.clover",
+    });
+  }
+
+  return stripe;
+}
 
 export async function POST() {
+  const stripe = getStripe();
   const cookieStore = await cookies();
   const userId = cookieStore.get("user_id")?.value;
 
@@ -26,13 +39,7 @@ export async function POST() {
     client_reference_id: userId,
     line_items: [
       {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: "Weekly Reports (1 year)",
-          },
-          unit_amount: 100, // $1 = 100 cents
-        },
+        price: process.env.STRIPE_WEEKLY_REPORTS_PRICE_ID!,
         quantity: 1,
       },
     ],
