@@ -1,6 +1,6 @@
 import { PageContainer } from "@/app/components/PageContainer";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
-import { Button } from "@/app/components/buttons/Button";
+import { UnlockWeeklyReports } from "@/app/weekly-reports/UnlockWeeklyReports";
 
 export default async function Page() {
   const result = await withUserDayGuard(["day-active", "day-summary"]);
@@ -14,7 +14,7 @@ export default async function Page() {
       ) : (
         <div className="flex flex-col gap-3">
           <p>Weekly reports are available with a $5/year unlock.</p>
-          <Button title="Unlock Weekly Reports" />
+          <UnlockWeeklyReports user={user} />
         </div>
       )}
     </PageContainer>
