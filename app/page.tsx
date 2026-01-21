@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { Button } from "@/app/components/buttons/Button";
 import { PageContainer } from "@/app/components/PageContainer";
 
@@ -30,6 +32,25 @@ export default async function Home() {
           <Button title="Start using Daily Signal" href="/day-state" />
         </div>
       </div>
+      <footer className="mt-auto flex flex-col gap-1">
+        <p>© Marmalade skies s.r.o.</p>
+        <p>IČO 24372901</p>
+        <div>
+          <Link
+            href="/privacy-policy"
+            className="hover:underline text-slate-700"
+          >
+            Privacy Policy
+          </Link>{" "}
+          ·{" "}
+          <Link
+            href="/terms-of-service"
+            className="hover:underline text-slate-700"
+          >
+            Terms of Service
+          </Link>
+        </div>
+      </footer>
     </PageContainer>
   );
 }
