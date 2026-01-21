@@ -21,6 +21,10 @@ export interface UserFromDB {
   >;
   action_on_overload: ActionOnOverload;
   summary_start_hour: number | null;
+  email?: string;
+  weekly_reports_enabled: boolean;
+  stripe_customer_id?: string;
+  paid_until?: number;
 }
 
 export interface SignalFromDB {
