@@ -60,24 +60,26 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
+  const stripeCustomerId =
+    typeof session.customer === "string" ? session.customer : null;
+
   const [row] = await sql`
-    UPDATE users
-    SET
-      weekly_reports_enabled = true,
-      paid_until = NOW() + INTERVAL '1 year'
-    WHERE
-      user_id = ${userId}
-      AND weekly_reports_enabled = false
-    RETURNING email
-  `;
+      UPDATE users
+      SET
+        weekly_reports_enabled = true,
+        paid_until = NOW() + INTERVAL '1 year',
+        stripe_customer_id = COALESCE(stripe_customer_id, ${stripeCustomerId})
+      WHERE
+        user_id = ${userId}
+        AND weekly_reports_enabled = false
+      RETURNING email
+    `;
 
   if (!row) {
     return NextResponse.json({ received: true, duplicate: true });
   }
 
-  const stripeEmail = session.customer_details?.email;
-
-  const emailToUse = row?.email ?? stripeEmail;
+  const emailToUse = row?.email;
 
   if (emailToUse) {
     if (!process.env.RESEND_API_KEY) {
@@ -87,9 +89,9 @@ export async function POST(req: NextRequest) {
     const resend = new Resend(process.env.RESEND_API_KEY!);
 
     await resend.emails.send({
-      from: "hello@marmaladeskies.dev",
+      from: "Daily Signal by Marmalade Skies <hello@marmaladeskies.dev>",
       to: emailToUse,
-      subject: "Weekly Reports unlocked",
+      subject: "Daily Signal - Weekly Reports unlocked",
       html: "<p>Your weekly reports are now available.</p>",
     });
   }
