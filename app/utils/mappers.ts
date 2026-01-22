@@ -43,5 +43,7 @@ export const mapUserFromDB = (userFromDB: UserFromDB): User => {
     strictnessLevel: userFromDB.strictness_level,
     typicalDailyLoad: userFromDB.typical_daily_load,
     summaryStartHour: userFromDB.summary_start_hour,
+    weeklyReportsEnabled: userFromDB.weekly_reports_enabled,
+    paidUntil: userFromDB.paid_until,
   };
 };
