@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { sql } from "@/lib/db";
 
-export const config = {
-  api: {
-    bodyParser: false,
-  },
-};
-
 let stripe: Stripe | null = null;
 
 function getStripe() {
