@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { Resend } from "resend";
+
 import { sql } from "@/lib/db";
 
 let stripe: Stripe | null = null;
@@ -27,13 +29,17 @@ export async function POST(req: NextRequest) {
     return new NextResponse("Missing signature", { status: 400 });
   }
 
+  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+    return new NextResponse("Webhook secret not configured", { status: 500 });
+  }
+
   let event: Stripe.Event;
 
   try {
     event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!,
+      process.env.STRIPE_WEBHOOK_SECRET,
     );
   } catch {
     return new NextResponse("Invalid signature", { status: 400 });
@@ -54,13 +60,39 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true });
   }
 
-  await sql`
+  const [row] = await sql`
     UPDATE users
     SET
       weekly_reports_enabled = true,
       paid_until = NOW() + INTERVAL '1 year'
-    WHERE user_id = ${userId}
+    WHERE
+      user_id = ${userId}
+      AND weekly_reports_enabled = false
+    RETURNING email
   `;
+
+  if (!row) {
+    return NextResponse.json({ received: true, duplicate: true });
+  }
+
+  const stripeEmail = session.customer_details?.email;
+
+  const emailToUse = row?.email ?? stripeEmail;
+
+  if (emailToUse) {
+    if (!process.env.RESEND_API_KEY) {
+      throw new Error("RESEND_API_KEY is not set");
+    }
+
+    const resend = new Resend(process.env.RESEND_API_KEY!);
+
+    await resend.emails.send({
+      from: "hello@marmaladeskies.dev",
+      to: emailToUse,
+      subject: "Weekly Reports unlocked",
+      html: "<p>Your weekly reports are now available.</p>",
+    });
+  }
 
   return NextResponse.json({ received: true });
 }
