@@ -7,7 +7,7 @@ import { ONBOARDING_QUESTIONS } from "@/app/components/onboarding-questions";
 import { Button } from "@/app/components/buttons/Button";
 import { OnboardingQuestion, User } from "@/app/types";
 import { Select } from "@/app/components/Select";
-import { DEFAULT_TIMEZONE } from "@/app/constants";
+import { DEFAULT_SUMMARY_START_HOUR, DEFAULT_TIMEZONE } from "@/app/constants";
 
 const OPTIONS = [
   { value: "manual", label: "Only after I close the day" },
@@ -39,7 +39,7 @@ export const SettingsModal = ({
     values: {
       summaryStartHour:
         !user || user.summaryStartHour === null
-          ? "manual"
+          ? `${DEFAULT_SUMMARY_START_HOUR}`
           : user.summaryStartHour.toString(),
     },
   });

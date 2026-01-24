@@ -34,3 +34,5 @@ export const SIGNALS_FLAT = SIGNALS.map((signal) => signal.signals).flat();
 
 export const DEFAULT_TIMEZONE =
   Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+export const DEFAULT_SUMMARY_START_HOUR = 18;

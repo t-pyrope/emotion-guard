@@ -1,6 +1,7 @@
 import {
   formatDate,
   formatMode,
+  getHourAsNumber,
   getTimeline,
   mapMorningFromDB,
   mapSignalFromDB,
@@ -9,7 +10,11 @@ import {
 import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
 import { SignalFromDB } from "@/app/types";
-import { SIGNALS_FLAT } from "@/app/constants";
+import {
+  DEFAULT_SUMMARY_START_HOUR,
+  DEFAULT_TIMEZONE,
+  SIGNALS_FLAT,
+} from "@/app/constants";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 import { PageContainer } from "@/app/components/PageContainer";
 import { computeDayState } from "@/app/utils";
@@ -87,18 +92,39 @@ export default async function Page() {
     (signal) => signal.signalType === "stop_accepted",
   );
 
+  const hour = getHourAsNumber(user?.timezone || DEFAULT_TIMEZONE);
+  const summaryStartHour = user?.summaryStartHour
+    ? user.summaryStartHour
+    : DEFAULT_SUMMARY_START_HOUR;
+
+  const isClosedAutomatically =
+    !(morning?.state !== "closed") || hour >= summaryStartHour;
+  const noActivity = !morning && !signals.length;
+
+  const dayOverviewListItems = [
+    `The system started in ${formatMode(firstDayState.mode)}`,
+  ];
+
+  if (noActivity) {
+    dayOverviewListItems.push(
+      `No activity detected today. The day was closed automatically at ${summaryStartHour}:00.`,
+    );
+  } else {
+    dayOverviewListItems.push(
+      modeChangedCount > 0
+        ? `The mode changed ${modeChangedCount} ${modeChangedCount === 1 ? "time" : "times"} during the day`
+        : `The mode didn't change during the day`,
+    );
+
+    if (isClosedAutomatically) {
+      dayOverviewListItems.push("The day was closed automatically at 18:00.");
+    }
+  }
+
   return (
     <PageContainer title="Daily summary">
       <div className="flex flex-col gap-3 w-full">
-        <Block
-          title="Day overview"
-          listItems={[
-            `The system started in ${formatMode(firstDayState.mode)}`,
-            modeChangedCount > 0
-              ? `The mode changed ${modeChangedCount} ${modeChangedCount === 1 ? "time" : "times"} during the day`
-              : `The mode didn't change during the day`,
-          ]}
-        />
+        <Block title="Day overview" listItems={dayOverviewListItems} />
         {isSystemIntervented && (
           <Block
             title="System intervention"

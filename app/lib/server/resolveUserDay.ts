@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { sql } from "@/lib/db";
 import { MorningCheckinFromDB, SignalFromDB, UserFromDB } from "@/app/types";
 import { formatDate, getHourAsNumber } from "@/app/utils";
-import { DEFAULT_TIMEZONE } from "@/app/constants";
+import { DEFAULT_SUMMARY_START_HOUR, DEFAULT_TIMEZONE } from "@/app/constants";
 
 export type UserDayStatus =
   | "no-user"
@@ -36,14 +36,14 @@ export async function resolveUserDay(): Promise<UserDayResolution> {
   `;
   const morning = mornings[0] as MorningCheckinFromDB | undefined;
 
-  if (user) {
-    const hour = getHourAsNumber(user.timezone);
-    if (
-      morning?.state === "closed" ||
-      (user.summary_start_hour && hour >= user.summary_start_hour)
-    ) {
-      return { status: "day-summary", user, morning };
-    }
+  const hour = getHourAsNumber(user?.timezone || DEFAULT_TIMEZONE);
+
+  if (
+    morning?.state === "closed" ||
+    (user && user.summary_start_hour && hour >= user.summary_start_hour) ||
+    hour >= DEFAULT_SUMMARY_START_HOUR
+  ) {
+    return { status: "day-summary", user, morning };
   }
 
   const signalsFromDB = (await sql`
