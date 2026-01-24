@@ -32,14 +32,7 @@ export const getTimeline = (
     },
   ];
 
-  if (morning && isMorningCheckedIn(morning)) {
-    timeline.push({
-      createdAt: morning.createdAt,
-      message: `Morning check in values entered.${morningDayState.mode !== firstDayState.mode ? ` Mode → ${morningDayState.mode}` : ""}`,
-      id: morning.id,
-      currentMode: morningDayState.mode,
-    });
-  }
+  const morningCheckedIn = isMorningCheckedIn(morning);
 
   if (signals.length) {
     let prevState: DayState = firstDayState;
@@ -58,6 +51,25 @@ export const getTimeline = (
         message = `${message}.${isModeChanged ? ` Mode → ${state.mode}.` : ""}${isRulesChanged ? " Rules have changed." : ""}`;
       }
 
+      if (morning && morningCheckedIn) {
+        const morningTimestamp = +morning.createdAt;
+        const currSignalTimestamp = +lastSignal.createdAt;
+        const prevLog = timeline.at(-1);
+        const prevLogTimestamp = prevLog ? +prevLog.createdAt : 0;
+
+        if (
+          morningTimestamp < currSignalTimestamp &&
+          morningTimestamp > prevLogTimestamp
+        ) {
+          timeline.push({
+            createdAt: morning.createdAt,
+            message: `Morning check in values entered.${morningDayState.mode !== prevLog?.currentMode ? ` Mode → ${morningDayState.mode}` : ""}`,
+            id: morning.id,
+            currentMode: morningDayState.mode,
+          });
+        }
+      }
+
       timeline.push({
         id: lastSignal.id,
         createdAt: lastSignal.createdAt,
@@ -67,6 +79,19 @@ export const getTimeline = (
 
       prevState = state;
     }
+  }
+
+  if (
+    morning &&
+    morningCheckedIn &&
+    !timeline.find((log) => log.id === morning.id)
+  ) {
+    timeline.push({
+      createdAt: morning.createdAt,
+      message: `Morning check in values entered.${morningDayState.mode !== timeline.at(-1)?.currentMode ? ` Mode → ${morningDayState.mode}` : ""}`,
+      id: morning.id,
+      currentMode: morningDayState.mode,
+    });
   }
 
   return timeline;
