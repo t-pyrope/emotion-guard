@@ -28,11 +28,9 @@ interface SettingsValues {
 export const SettingsModal = ({
   onCloseModalAction,
   user,
-  resetDataAction,
 }: {
   onCloseModalAction: () => void;
   user: User | null;
-  resetDataAction: () => void;
 }) => {
   const router = useRouter();
   const { register, handleSubmit } = useForm<SettingsValues>({
@@ -99,6 +97,23 @@ export const SettingsModal = ({
     }
   };
 
+  const resetData = async () => {
+    if (!user) return;
+
+    try {
+      const res = await fetch("/api/user", {
+        method: "DELETE",
+      });
+
+      if (res.ok) {
+        onCloseModalAction();
+        router.replace("/");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   return (
     <Modal onCloseModalAction={onCloseModalAction} title="Settings">
       <form className="space-y-4" onSubmit={handleSubmit(submit)}>
@@ -122,7 +137,7 @@ export const SettingsModal = ({
               title="Delete all existing data"
               variant="error"
               size="small"
-              onClick={resetDataAction}
+              onClick={resetData}
             />
           )}
 

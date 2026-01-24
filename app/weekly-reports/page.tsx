@@ -5,6 +5,7 @@ import { sql } from "@/lib/db";
 import { getWeeklySummary } from "@/app/utils";
 import { WeeklySummary } from "@/app/utils/getWeeklySummary";
 import { MorningCheckinFromDB, SignalFromDB } from "@/app/types";
+import { Actions } from "@/app/weekly-reports/Actions";
 
 export default async function Page() {
   const result = await withUserDayGuard(["day-active", "day-summary"]);
@@ -56,14 +57,18 @@ export default async function Page() {
         </div>
       )}
       {weeklySummary && (
-        <>
-          <div>Mode changes: {weeklySummary.modeChanges}</div>
+        <div className="flex flex-col gap-4">
           <div>
-            Dominant mode{weeklySummary.dominantModes.length > 1 ? "s" : ""}:{" "}
-            {weeklySummary.dominantModes.join(", ")}
+            <div>Mode changes: {weeklySummary.modeChanges}</div>
+            <div>
+              Dominant mode{weeklySummary.dominantModes.length > 1 ? "s" : ""}:{" "}
+              {weeklySummary.dominantModes.join(", ")}
+            </div>
+            <div>Stop signals: {weeklySummary.stopSignals}</div>
           </div>
-          <div>Stop signals: {weeklySummary.stopSignals}</div>
-        </>
+
+          <Actions />
+        </div>
       )}
     </PageContainer>
   );

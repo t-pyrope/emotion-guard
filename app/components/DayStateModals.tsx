@@ -50,23 +50,6 @@ export const DayStateModals = ({
     setModal(null);
   };
 
-  const resetData = async () => {
-    if (!user) return;
-
-    try {
-      const res = await fetch("/api/user", {
-        method: "DELETE",
-      });
-
-      if (res.ok) {
-        closeModal();
-        router.replace("/");
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
   return (
     <>
       <div className="fixed lg:bottom-15 lg:right-15 bottom-5 right-5">
@@ -105,11 +88,7 @@ export const DayStateModals = ({
       )}
 
       {modal === "settings" && (
-        <SettingsModal
-          onCloseModalAction={closeModal}
-          user={user}
-          resetDataAction={resetData}
-        />
+        <SettingsModal onCloseModalAction={closeModal} user={user} />
       )}
 
       {modal === "morning" && (

@@ -151,7 +151,7 @@ export default async function Page() {
         <div>The day is now closed.</div>
       </div>
 
-      <Actions />
+      <Actions user={user} morning={morning} />
     </PageContainer>
   );
 }
