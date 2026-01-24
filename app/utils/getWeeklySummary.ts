@@ -33,13 +33,17 @@ export function getWeeklySummary(
   let modeChangedCount = 0;
 
   for (const morning of mornings) {
+    const morningDate = DateTime.fromJSDate(new Date(morning.day_date))
+      .setZone(user.timezone)
+      .toISODate();
+
     const signalsOfTheMorning = signals
       .filter((signal) => {
-        const signalDate = DateTime.fromISO(signal.created_at, { zone: "utc" })
+        const signalDate = DateTime.fromJSDate(new Date(signal.created_at))
           .setZone(user.timezone)
           .toISODate();
 
-        return signalDate === morning.day_date;
+        return signalDate === morningDate;
       })
       .map((signal) => mapSignalFromDB(signal));
 
