@@ -51,7 +51,7 @@ export default async function Page() {
         </div>
       ) : (
         <div className="flex flex-col gap-3">
-          <p>Weekly reports are available with a $5/year unlock.</p>
+          <p>Weekly reports are available with a $1/year unlock.</p>
           <UnlockWeeklyReports user={user} />
         </div>
       )}
