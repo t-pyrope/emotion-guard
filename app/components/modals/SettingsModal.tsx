@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Modal } from "@/app/components/modals/Modal";
 import { ONBOARDING_QUESTIONS } from "@/app/components/onboarding-questions";
 import { Button } from "@/app/components/buttons/Button";
-import { User } from "@/app/types";
+import { OnboardingQuestion, User } from "@/app/types";
 import { Select } from "@/app/components/Select";
 import { DEFAULT_TIMEZONE } from "@/app/constants";
 
@@ -79,6 +79,26 @@ export const SettingsModal = ({
     }
   };
 
+  const getLabel = (question: OnboardingQuestion) => {
+    if (!user) return "--";
+
+    if (question.radioGroupName === "overloadSources") {
+      const values = user[question.radioGroupName] as User["overloadSources"];
+      const answers = question.answers.filter((ans) =>
+        values.includes(ans.value as User["overloadSources"][number]),
+      );
+      return answers.length > 0
+        ? answers.map((ans) => ans.label).join(", ")
+        : "--";
+    } else {
+      return (
+        question.answers.find(
+          (ans) => ans.value === user[question.radioGroupName],
+        )?.label ?? "--"
+      );
+    }
+  };
+
   return (
     <Modal onCloseModalAction={onCloseModalAction} title="Settings">
       <form className="space-y-4" onSubmit={handleSubmit(submit)}>
@@ -86,17 +106,7 @@ export const SettingsModal = ({
           {ONBOARDING_QUESTIONS.map((question) => (
             <div key={question.radioGroupName} className="pb-2">
               <div className="font-medium">{question.question}</div>
-              <div>
-                {user
-                  ? question.answers.find(
-                      (answer) =>
-                        answer.value ===
-                        (question.radioGroupName === "overloadSources"
-                          ? user[question.radioGroupName]?.[0]
-                          : user[question.radioGroupName]),
-                    )?.label
-                  : "--"}
-              </div>
+              <div>{getLabel(question)}</div>
             </div>
           ))}
           <Select
@@ -106,24 +116,24 @@ export const SettingsModal = ({
             {...register("summaryStartHour")}
           />
         </div>
-        <div className="flex gap-1">
+        <div className="flex gap-2 flex-wrap">
+          {user && (
+            <Button
+              title="Delete all existing data"
+              variant="error"
+              size="small"
+              onClick={resetDataAction}
+            />
+          )}
+
           <Button
             title="Open onboarding"
             size="small"
             onClick={openOnboarding}
           />
 
-          {user && (
-            <Button
-              title="Reset all data"
-              variant="error"
-              size="small"
-              onClick={resetDataAction}
-            />
-          )}
+          <Button title="Submit" size="small" type="submit" />
         </div>
-
-        <Button title="Submit" size="small" type="submit" />
       </form>
     </Modal>
   );

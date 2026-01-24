@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { RadioGroup } from "@/app/components/RadioGroup";
 import { Button } from "@/app/components/buttons/Button";
@@ -21,6 +21,7 @@ export const OnboardingForm = () => {
   } = useForm<OnboardingFormValues>({
     mode: "onChange",
   });
+  const router = useRouter();
 
   const values = watch();
 
@@ -34,7 +35,7 @@ export const OnboardingForm = () => {
     });
 
     if (res.ok) {
-      redirect("/morning-check-in");
+      router.back();
     }
   };
 

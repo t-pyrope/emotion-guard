@@ -38,7 +38,7 @@ export default async function Page() {
   if (daysCount < 2) {
     subtitle = "Not enough data for weekly patterns yet.";
   } else if (daysCount < 7) {
-    subtitle = `Based on ${daysCount} days so far.`;
+    subtitle = `Based on ${daysCount} active days so far.`;
   } else {
     subtitle = "Last 7 days.";
   }

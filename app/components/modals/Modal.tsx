@@ -14,7 +14,7 @@ export const Modal = ({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 bg-black/50 blur-xs"
         onClick={onCloseModalAction}
       />
 
@@ -22,7 +22,7 @@ export const Modal = ({
         className="
       relative overflow-hidden flex flex-col
       bg-background border border-neutral-200 rounded-lg shadow-lg
-      w-full max-w-md mx-4 max-h-(--90vh)"
+      w-full max-w-xl mx-4 max-h-(--90vh)"
       >
         <div className="flex items-center justify-between p-6 border-b border-neutral-200">
           <h2>{title}</h2>
