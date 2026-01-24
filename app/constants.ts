@@ -36,3 +36,5 @@ export const DEFAULT_TIMEZONE =
   Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export const DEFAULT_SUMMARY_START_HOUR = 18;
+
+export const MODE_CHANGED_STRING = "Mode →";

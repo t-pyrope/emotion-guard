@@ -13,12 +13,14 @@ import { SignalFromDB } from "@/app/types";
 import {
   DEFAULT_SUMMARY_START_HOUR,
   DEFAULT_TIMEZONE,
+  MODE_CHANGED_STRING,
   SIGNALS_FLAT,
 } from "@/app/constants";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 import { PageContainer } from "@/app/components/PageContainer";
 import { computeDayState } from "@/app/utils";
 import { Actions } from "@/app/daily-summary/Actions";
+import { DateTime } from "luxon";
 
 const Block = ({
   title,
@@ -70,7 +72,7 @@ export default async function Page() {
   const timeline = getTimeline(morning, user, signals);
 
   const modeChangedCount = timeline.filter((log) =>
-    log.message.includes("Mode changed to"),
+    log.message.includes(MODE_CHANGED_STRING),
   ).length;
   const firstDayState = computeDayState(morning, [], user);
   const mostCommonSignal = signalsWithCount.at(-1);
@@ -98,7 +100,7 @@ export default async function Page() {
     : DEFAULT_SUMMARY_START_HOUR;
 
   const isClosedAutomatically =
-    !(morning?.state !== "closed") || hour >= summaryStartHour;
+    !(morning?.state !== "closed") && hour >= summaryStartHour;
   const noActivity = !morning && !signals.length;
 
   const dayOverviewListItems = [
@@ -117,7 +119,16 @@ export default async function Page() {
     );
 
     if (isClosedAutomatically) {
-      dayOverviewListItems.push("The day was closed automatically at 18:00.");
+      dayOverviewListItems.push(
+        `The day was closed automatically at ${summaryStartHour}:00.`,
+      );
+    } else {
+      const hour = morning?.closedAt
+        ? DateTime.fromJSDate(new Date(morning.closedAt))
+            .setZone(user?.timezone || DEFAULT_TIMEZONE)
+            .toLocaleString(DateTime.TIME_24_SIMPLE)
+        : undefined;
+      dayOverviewListItems.push(`The day was closed at ${hour}.`);
     }
   }
 

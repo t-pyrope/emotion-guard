@@ -21,6 +21,7 @@ export const mapMorningFromDB = (
     dayDate: morningFromDB.day_date,
     createdAt: morningFromDB.created_at,
     state: morningFromDB.state,
+    closedAt: morningFromDB.closed_at,
   };
 };
 

@@ -45,4 +45,5 @@ export interface MorningCheckinFromDB {
   resource_level?: 1 | 2 | 3 | null;
   created_at: string;
   state: "open" | "closed";
+  closed_at?: string;
 }

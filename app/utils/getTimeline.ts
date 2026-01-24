@@ -2,7 +2,11 @@ import { DateTime } from "luxon";
 
 import { DayState, MorningCheckin, Signal, User } from "@/app/types";
 import { computeDayState, isMorningCheckedIn } from "@/app/utils";
-import { DEFAULT_TIMEZONE, SIGNALS_DAILY_SUMMARY } from "@/app/constants";
+import {
+  DEFAULT_TIMEZONE,
+  MODE_CHANGED_STRING,
+  SIGNALS_DAILY_SUMMARY,
+} from "@/app/constants";
 
 interface TimelineEvent {
   createdAt: string;
@@ -48,7 +52,7 @@ export const getTimeline = (
         JSON.stringify(state.rules) !== JSON.stringify(prevState.rules);
 
       if (isModeChanged || isRulesChanged) {
-        message = `${message}.${isModeChanged ? ` Mode → ${state.mode}.` : ""}${isRulesChanged ? " Rules have changed." : ""}`;
+        message = `${message}.${isModeChanged ? ` ${MODE_CHANGED_STRING} ${state.mode}.` : ""}${isRulesChanged ? " Rules have changed." : ""}`;
       }
 
       if (morning && morningCheckedIn) {
