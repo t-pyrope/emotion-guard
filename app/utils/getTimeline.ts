@@ -8,6 +8,7 @@ interface TimelineEvent {
   createdAt: string;
   message: string;
   id: string;
+  currentMode: DayState["mode"];
 }
 
 export const getTimeline = (
@@ -27,6 +28,7 @@ export const getTimeline = (
       createdAt: startOfToday.toISOString(),
       message: `Mode set to ${firstDayState.mode}`,
       id: "0",
+      currentMode: firstDayState.mode,
     },
   ];
 
@@ -35,6 +37,7 @@ export const getTimeline = (
       createdAt: morning.createdAt,
       message: `Morning check in values entered.${morningDayState.mode !== firstDayState.mode ? ` Mode → ${morningDayState.mode}` : ""}`,
       id: morning.id,
+      currentMode: morningDayState.mode,
     });
   }
 
@@ -58,6 +61,7 @@ export const getTimeline = (
       timeline.push({
         id: lastSignal.id,
         createdAt: lastSignal.createdAt,
+        currentMode: state.mode,
         message,
       });
 

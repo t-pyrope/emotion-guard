@@ -5,6 +5,7 @@ export { formatModeWithSubtitle } from "./formatModeWithSubtitle";
 export { getHourAsNumber } from "./getHourAsNumber";
 export { getRuleMessages } from "./getRuleMessages";
 export { getTimeline } from "./getTimeline";
+export { getWeeklySummary } from "./getWeeklySummary";
 export { isMorningCheckedIn } from "./isMorningCheckedIn";
 export { shouldStopTrigger } from "./shouldStopTrigger";
 
