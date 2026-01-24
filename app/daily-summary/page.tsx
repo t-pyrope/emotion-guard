@@ -13,6 +13,7 @@ import { SIGNALS_FLAT } from "@/app/constants";
 import { withUserDayGuard } from "@/app/lib/server/withUserDayGuard";
 import { PageContainer } from "@/app/components/PageContainer";
 import { computeDayState } from "@/app/utils";
+import { Actions } from "@/app/daily-summary/Actions";
 
 const Block = ({
   title,
@@ -112,6 +113,8 @@ export default async function Page() {
         />
         <div>The day is now closed.</div>
       </div>
+
+      <Actions />
     </PageContainer>
   );
 }
