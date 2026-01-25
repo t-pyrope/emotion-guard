@@ -5,7 +5,7 @@ export default function Page() {
     <PageContainer title="Terms of Service">
       <div className="flex flex-col gap-4">
         <p>
-          Last updated: <time dateTime="2026-01-21">21.1.2026</time>
+          Last updated: <time dateTime="2026-01-25">25.1.2026</time>
         </p>
         <section className="flex flex-col gap-2">
           <h3 className="text-xl">1. Service description</h3>
