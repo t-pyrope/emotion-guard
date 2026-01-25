@@ -7,12 +7,12 @@ import { RadioGroup } from "@/app/components/RadioGroup";
 import { Button } from "@/app/components/buttons/Button";
 import { FormProgress } from "@/app/components/FormProgress";
 
-import { OnboardingFormValues } from "../types";
+import { OnboardingFormValues, UserFromDB } from "../types";
 import { ONBOARDING_QUESTIONS } from "./onboarding-questions";
 import { LoadingBar } from "@/app/components/LoadingBar";
 import { DEFAULT_TIMEZONE } from "@/app/constants";
 
-export const OnboardingForm = () => {
+export const OnboardingForm = ({ user }: { user: UserFromDB | null }) => {
   const {
     register,
     handleSubmit,
@@ -20,6 +20,16 @@ export const OnboardingForm = () => {
     formState: { isValid, isSubmitting },
   } = useForm<OnboardingFormValues>({
     mode: "onChange",
+    defaultValues:
+      user && user.main_context
+        ? {
+            mainContext: user.main_context,
+            typicalDailyLoad: user.typical_daily_load,
+            overloadSources: user.overload_sources,
+            actionOnOverload: user.action_on_overload,
+            strictnessLevel: user.strictness_level,
+          }
+        : undefined,
   });
   const router = useRouter();
 
