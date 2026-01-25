@@ -21,13 +21,3 @@ Technical demo. No active development is planned for now
 
 ## What this project didn't brought to me, but it would be nice, if it did
 1. I could have started creating a UI kit, which I would reuse in other projects
-
-## Getting started
-
-First, run the development server:
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
