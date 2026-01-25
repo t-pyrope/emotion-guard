@@ -1,50 +1,26 @@
 # Daily Signal — Technical Demo
 The application is available on [www.daily-signal.com](https://www.daily-signal.com/)
 
-## 1. Problem
+## Problem
 A system for detecting pre-visible overload via state transitions and directive day modes.
 Not conversational well-being tool, but an engine of limits.
 
-## 2. Data Model
-### users
-- `user_id` — UUID, PK
-- `timezone`
-- `strictness_level` — gentle | standard | strict
-- `main_context` — study | work | both
-- `typical_daily_load` — light | moderate | heavy
-- `overload_sources` — TEXT[]
-- `action_on_overload` — push_through | shut_down | lose_focus
-- `active_hours` — morning | day | evening | irregular
-- `created_at`
+## Status
+Technical demo. No active development is planned for now
 
-### day_sessions (ex morning_checkins)
-- `id` — UUID, PK
-- `user_id` → FK users
-- `day_date` — UNIQUE per user
-- `sleep_level` 1–3
-- `body_state` 1–3
-- `mental_state` 1–3
-- `contacts_expected` 1–3
-- `resource_level` 1–3
-- `state` — open | closed
-- `closed_at`
-- `created_at`
+## Backlog
+1. remove middleware (deprecated)
+2. add optional email field to settings and save the user email
+3. check if the site appears in google search
+4. structure the code better
 
-### signals
-- `id` — UUID, PK
-- `user_id` → FK users
-- `signal_type`
-- `created_at`
+## What this project brought to me
+1. I've learnt more about serverless, SQL, Tailwind
+2. I've implemented Stripe, Resend first time
+3. I should have deployed the site of the company
 
-## Serverless Routes
-- `POST /api/users` - user creation
-- `POST /api/morning-check-in` - morning check-in
-- `POST /api/signal` - log signal
-- `PUT /api/close-the-day` - open → closed
-
-## Timezone
-- Current usage: day_sessions.day_date is calculated with the user timezone, so sessions refer to the user day rather than the server day.
-- Limitations: time-based UI logic, such as when to hide Morning Check-in or show Daily Summary, has not yet been implemented.
+## What this project didn't brought to me, but it would be nice, if it did
+1. I could have started creating a UI kit, which I would reuse in other projects
 
 ## Getting started
 
