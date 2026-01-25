@@ -56,7 +56,7 @@ export default async function Page() {
           <UnlockWeeklyReports user={user} />
         </div>
       )}
-      {weeklySummary && (
+      {isWeeklyReportsEnabled && weeklySummary && (
         <div className="flex flex-col gap-4">
           <div>
             <div>Mode changes: {weeklySummary.modeChanges}</div>

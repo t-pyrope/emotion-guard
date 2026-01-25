@@ -69,11 +69,8 @@ export const SettingsModal = ({
     });
 
     if (res.ok) {
-      if (!user) {
-        router.refresh();
-      } else {
-        onCloseModalAction();
-      }
+      router.refresh();
+      onCloseModalAction();
     }
   };
 
