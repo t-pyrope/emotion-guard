@@ -4,9 +4,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: "https://daily-signal.com/",
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 1,
     },
   ];
 }
