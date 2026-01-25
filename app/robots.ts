@@ -5,8 +5,14 @@ export default function robots(): MetadataRoute.Robots {
     rules: [
       {
         userAgent: "*",
-        allow: ["/", "/onboarding"],
-        disallow: ["/morning-check-in", "/day-state", "/daily-summary"],
+        allow: ["/"],
+        disallow: [
+          "/morning-check-in",
+          "/day-state",
+          "/daily-summary",
+          "/weekly-reports",
+          "/onboarding",
+        ],
       },
     ],
     sitemap: "https://daily-signal.com/sitemap.xml",
