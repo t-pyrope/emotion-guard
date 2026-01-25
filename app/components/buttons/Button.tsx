@@ -25,7 +25,7 @@ export const Button = ({
       ${variant === "outlined" && "border-2 border-slate-800 hover:bg-slate-50 text-slate-800"}
       ${size === "medium" && "font-medium h-12 shadow-lg"}
       ${size === "small" && "font-small h-10 shadow-sm"}
-      px-6 hover:scale-[1.01]
+      px-6 enabled:hover:scale-[1.01]
       disabled:opacity-75 transition-all
 `;
   return href ? (
