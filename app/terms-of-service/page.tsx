@@ -13,7 +13,6 @@ export default function Page() {
           <ul className="list-disc pl-5 flex flex-col gap-1">
             <li>Daily check-ins</li>
             <li>Rule-based usage guidance</li>
-            <li>Rule-based usage guidance</li>
             <li>Optional analytical reports</li>
           </ul>
 
@@ -40,6 +39,14 @@ export default function Page() {
           <p>Access to paid features is granted after successful payment</p>
           <p>
             We reserve the right to change pricing or availability of features.
+          </p>
+          <p>
+            Due to the nature of digital services, payments are non-refundable
+            once access is granted, unless required by applicable law.
+          </p>
+          <p>
+            We may, at our discretion, provide a refund in individual cases if
+            the service was not meaningfully used.
           </p>
         </section>
 
