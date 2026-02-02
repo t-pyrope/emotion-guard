@@ -12,7 +12,7 @@ export const Actions = ({
   user,
   morning,
 }: {
-  user: User;
+  user: User | null;
   morning?: MorningCheckin;
 }) => {
   const [modal, setModal] = useState<null | "settings" | "morning">(null);

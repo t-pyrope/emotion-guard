@@ -45,12 +45,12 @@ export default async function Page() {
   const result = await withUserDayGuard(["day-summary"]);
 
   const { user: userFromDB, morning: morningFromDB } = result;
-  const user = mapUserFromDB(userFromDB!);
+  const user = userFromDB ? mapUserFromDB(userFromDB) : null;
   const morning = morningFromDB ? mapMorningFromDB(morningFromDB) : undefined;
 
   const userId = (await cookies()).get("user_id")?.value;
 
-  const today = formatDate(user.timezone);
+  const today = formatDate(user?.timezone ?? DEFAULT_TIMEZONE);
 
   const signalsFromDB = (await sql`
     SELECT *
