@@ -1,7 +1,7 @@
 "use client";
 import { MorningCheckInValues, UserFromDB } from "@/app/types";
 import { useForm } from "react-hook-form";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 import { MORNING_CHECK_IN_QUESTIONS } from "@/app/components/morning-check-in-questions";
 import { RadioGroup } from "@/app/components/RadioGroup";
@@ -10,6 +10,7 @@ import { FormProgress } from "@/app/components/FormProgress";
 import { DEFAULT_TIMEZONE } from "@/app/constants";
 
 export const MorningCheckInForm = ({ user }: { user: UserFromDB | null }) => {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -36,7 +37,7 @@ export const MorningCheckInForm = ({ user }: { user: UserFromDB | null }) => {
     });
 
     if (res.ok) {
-      redirect("/day-state");
+      router.push("/day-state");
     }
   };
 

@@ -17,7 +17,7 @@ export const mapMorningFromDB = (
     contactsExpected: morningFromDB.contacts_expected,
     resourceLevel: morningFromDB.resource_level,
     id: morningFromDB.id,
-    userId: morningFromDB.id,
+    userId: morningFromDB.user_id,
     dayDate: morningFromDB.day_date,
     createdAt: morningFromDB.created_at,
     state: morningFromDB.state,
