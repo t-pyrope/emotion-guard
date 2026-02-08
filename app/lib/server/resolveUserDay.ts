@@ -41,7 +41,7 @@ export async function resolveUserDay(): Promise<UserDayResolution> {
   if (
     morning?.state === "closed" ||
     (user && user.summary_start_hour && hour >= user.summary_start_hour) ||
-    hour >= DEFAULT_SUMMARY_START_HOUR
+    (!user && hour >= DEFAULT_SUMMARY_START_HOUR)
   ) {
     return { status: "day-summary", user, morning };
   }
